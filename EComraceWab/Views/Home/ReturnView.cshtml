@@ -1,0 +1,114 @@
+﻿@{
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+
+<section class="padding-y bg-light" id="Cart">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-9">
+                <div class="card">
+                    <div class="content-body" id="Items">
+                        <div class="form-group">
+                            <input type="text" id="Quantity" hidden class="form-control" disabled="disabled" />
+                        </div>
+
+                    </div> <!-- card-body .// -->
+
+
+
+                </div> <!-- card.// -->
+
+            </div> <!-- col.// -->
+
+
+        </div> <!-- row.// -->
+        <!-- =================== COMPONENT 1 CART+SUMMARY .//END  ====================== -->
+
+        <br>
+        <br>
+
+    </div> <!-- container .//  -->
+</section>
+<script>
+    $(document).ready(function () {
+        debugger
+        Returnsdata();
+    });
+
+    function Returnsdata() {
+        let url_str = window.location.href;
+        let url = new URL(url_str);
+        let search_params = url.searchParams;
+
+        let id = search_params.get('Id');
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Home/ReturnAllData?id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+                var items = '';
+                $.each(response, function (key, obj) {
+                    console.log(obj.OderItem);
+                    $
+                    items += '<article class="row gy-3 mb-4"  >'
+                    items += '<div class="col-lg-5">';
+                    items += "<h4  >OderID:    " + obj.OderItem.Id + "</h4>";
+                    items += "<p  class='title'>Reson:     " + obj.Reson + "</p>";
+                    items += '<figure class="itemside me-lg-5">';
+                     items += "<div class='aside'><img height='100'  src =" + obj.OderItem.Product.Image + "> </img> </div>";
+                    items += '<figcaption class="info">';
+                    items += "<p  class='title' >" + obj.OderItem.Product.Name + "</p>";
+                    items += "<p class='text-muted'> Return Quantity.    (" + obj.Quantity + ")</p>";
+                    items += '</figcaption>';
+                    items += ' </figure>';
+                    items += '</div>';
+                    items += '<div class="col-lg col-sm-4">';
+                    items += '<div class="float-lg-end">';
+                    items += (obj.Add == false)?'<a href="#" class="btn btn-light text-success"  onclick="AddStock(' + obj.Id + ')" > Add To Stock</a>':'';
+                    items += (obj.Check == false)?'<a href="#" class="btn btn-light text-warning"  onclick="Collect(' + obj.Id + ')" >Collect</a>':'';
+                    items += '</div>';
+                    items += '</div>';
+                    items += ' </article>';
+                    items += ' <hr>';
+                });
+                $("#Items").append(items);
+            }
+        });
+    }
+    function AddStock(id){
+
+        
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Home/AddToStock?id=' + id,
+            success: function (response) {
+                 location.reload(true)
+            }
+        });
+    } 
+    function Collect(id) {
+
+        
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Home/Collect?id=' + id,
+            success: function (response) {
+                location.reload(true)
+            }
+        });
+    }
+
+</script>

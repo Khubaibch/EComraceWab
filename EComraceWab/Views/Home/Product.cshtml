@@ -1,0 +1,734 @@
+﻿@model IEnumerable<EComraceWab.Models.ProductView>
+
+@{
+    ViewData["Title"] = "ProductList";
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+
+ <div class="d-sm-flex align-items-center justify-content-between mb-4">
+        <h1 class="h3 mb-0 text-gray-800">Products</h1>
+        <a href="#" id="AddProduct" class="d-none d-sm-inline-block btn btn-sm btn-primary shadow-sm">
+            Create New
+        </a>
+ </div>
+<table id="myTable" class="table table-bordered">
+    <thead>
+        <tr>
+
+            <th>
+                @Html.DisplayNameFor(model => model.Name)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Quantity)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Price)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.SubCategory)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Description)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CreatedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedBy)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.ModifiedDate)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Image)
+            </th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody id="tbody">
+    </tbody>
+</table>
+<div class="modal fade modal" id="ProductModal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="text-info modal-title">Add Product </h3>
+                <h2 class="text-info modal-title"> Update </h2>
+                <h4 class="text-info modal-title"> Add Variaction </h4>
+                <button type="button" class="close text-danger" onclick="HideModalPopUp();" data-dismiss="modal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="form" asp-action="AddProduct" name="myForm" onsubmit="onsubmit">
+                    <div class="form-group">
+                        <input type="text" id="Id" hidden class="form-control" disabled="disabled" />
+                    </div> <div1 class="form-group">
+                        <label>Name</label>
+                        <input type="text" placeholder="Enter Name" id="Name" name="Name" class="form-control" required />
+
+                    </div1>
+                    <div class="form-group">
+                        <label>Quantity</label>
+                        <input type="text" placeholder="Enter Quantity" id="Quantity" name="Quantity" class="form-control" required />
+                    </div>
+                    <div class="form-group">
+                        <label>Price</label>
+                        <input type="text" placeholder="Enter Price" id="Price" name="Price" class="form-control" required />
+                    </div>
+
+                    <div1 class="form-group">
+                        <label>SubCategory</label>
+                        <select id="SubCategory" name="SubCategory" class="form-select" aria-label="Default select example" class="form-control">
+                            <option id="SubName">Select Category</option>
+                        </select>
+                    </div1>
+                    <div1 class="form-group">
+                        <label>Description</label>
+                        <input type="text" placeholder="Enter Description" id="Discreption" name="Discreption" class="form-control" required />
+                    </div1>
+                    <div1 class="form-group">
+                        <label>Brand</label>
+                        <input type="text" placeholder="Enter Brand" id="Brand" name="Brand" class="form-control" required />
+                    </div1>
+                    <div1 class="form-group">
+                        <label>Type</label>
+                        <input type="text" placeholder="Enter Type" id="Type" name="Type" class="form-control" required />
+                    </div1>
+                    <div1 class="form-group">
+                        <label>Material</label>
+                        <input type="text" placeholder="Enter Material" id="Material" name="Discreption" class="form-control" required />
+                    </div1>
+                    <div1 class="mb-4">
+                        <label for="" class="form-label">Warranty</label>
+                        <textarea class="form-control" id="Warranty"></textarea>
+                    </div1>
+                    <div class="mb-4" id="Spaci">
+                        <label for="" class="form-label">Specification</label>
+                        <textarea class="form-control" id="Specification"></textarea>
+                    </div>
+                    @*   <div class="form-group" id="ShowVariaction">
+                    <label>Variaction</label>
+                    <select id="Variaction" name="ProductSize" multiple="multiple" class="form-select" aria-label="Default select example" class="form-control">
+                    </select>
+                    </div>
+                    *@
+
+                    <div id="newinput"></div>
+                    <button id="rowAdder" type="button"
+                            class="btn btn-dark">
+                        <span class="bi bi-plus-square-dotted">
+                        </span> Add Variaction
+                    </button>
+
+
+
+
+                    <div1 class="form-group">
+                        <input type="file" class="btn btn-primary" id="Image" name="image" onchange="UplodImagee(this)" required />
+                        <div id="image">
+                        </div>
+                        <img id="imagee" src="" alt="" />
+                    </div1>
+
+                    <div1 class="form-group">
+                        <input type="file" class="btn btn-primary" id="Images" multiple="multiple" name="images" onchange="UplodImage(this)" required />
+                        <div id="image1">
+                        </div>
+                        <img id="Image1" src="" alt="" />
+                    </div1>
+
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn-primary" type="submit" value="submit" onclick="AddProduct();" id="btnAdd">Save</button>
+                <button class="btn btn-warning" onclick="UpdateProduct();" style="display:none" id="btnUpdate">Update</button>
+                <button type="button" onclick="AddInventry();" class="btn btn-primary" data-dismiss="modal" id="Submit">Submit</button>
+                <button type="button" onclick="HideModalPopUp();" class="btn btn-danger btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        debugger
+        ShowData();
+
+    });
+
+    function ShowData() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            type: "Get",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            url: "/Home/productlist",
+            success: function (result) {
+                console.log(result);
+                var html = '';
+                $.each(result, function (key, item) {
+                    console.log(item);
+                    html += ' <tr>  ';
+                    html += ' <td>' + item.Name + '</td>';
+                    // html += '<td> ' + item.Quantity + ' </td>';
+                    //  html += '<td> ' + item.Price + ' </td>';
+                    html += ' <td> ' + item.SubCategory.Name + ' </td>';
+                    html += '<td> ' + item.Description + ' </td>';
+                    html += '<td> ' + (item.CreatedBy?.FirstName || "") + ' </td>';
+                    html += '<td> ' + (formatDate(item.CreatedDate)) + ' </td>';
+                    html += '<td> ' + (item.ModifiedBy?.FirstName || "") + ' </td>';
+                    html += '<td> ' + (formatDate(item?.ModifiedDate || "")) + ' </td>';
+                    html += "<td><img width='70' height='70' style='border: 2px solid black; ' src =" + item.Image + "> </img></td > ";
+                    html += '<td> <a href="#"  onclick="Edit(' + item.Id + ')" > <i class="bi bi-pen"></i></a> | <a href="#" class="" onclick="Delete(' + item.Id + ');"><i class="bi bi-trash"></i></a> |  <a href="#" class="btn btn-primary" onclick="VariactionsAdd(' + item.Id + ');">VariactionsAdd</a></td>';
+                    html += '</tr>';
+                });
+                $("#tbody").html(html);
+                $("#Image").append(html);
+
+
+            },
+            error: function (errormessage) {
+                alert(errormessage.responsetext);
+            }
+        });
+    };
+
+    // for date formate
+    function formatDate(createdDate) {
+        var d = new Date(createdDate),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    };
+    // for subcategory
+    function GetSubCategory() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            type: "Get",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            url: "/Admain/SubCategoryList",
+            success: function (result) {
+                $.each(result, function (data, obj) {
+                    console.log(data);
+                    console.log(obj);
+                    $("#SubCategory").append('<Option value=' + obj.Id + '>' + obj.Name + '</Option>');
+                });
+            },
+        });
+    };
+
+    // for image
+    function UplodImage(input) {
+        debugger
+        $("#image1").hide();
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (element) {
+                $("#Image1").attr("src", element.target.result).width(60).height(60);
+                console.log(element);
+
+            };
+            reader.readAsDataURL(input.files[0]);
+            $("#Image").show();
+        };
+    };
+    function UplodImagee(input) {
+        $("#image").hide();
+        debugger
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+            reader.onload = function (element) {
+                $("#imagee").attr("src", element.target.result).width(60).height(60);
+                console.log(element);
+
+            };
+            reader.readAsDataURL(input.files[0]);
+            $("#Image").show();
+        };
+    };
+    function Showimage() {
+        debugger
+        var file = $("#Image").get(0).files;
+        var files = $("#Images").get(0).files;
+        console.log(file);
+        $("#image").append("<img height='60'  src =" + file + "> </img>");
+        $.each(files, function (data, obj) {
+            $("#image1").append("<img height='60'  width='60' src =" + obj + "> </img>");
+        });
+    };
+
+    $("#AddProduct").click(function () {
+        debugger
+        $("#ProductModal").modal("show");
+        $("h2").hide();
+        $("h4").hide();
+        $("div2").hide();
+        $("#Submit").hide();
+        $("#ShowVariaction").hide();
+        $("#Spaci").hide();
+        GetSubCategory();
+    });
+    // for add product
+    function AddProduct() {
+        debugger
+        var Variactions = [];
+        var Variactionloop = $("input[name=child]:text");
+        $.each(Variactionloop, function (key, item) {
+
+            Variactions.push(item.value);
+        });
+        //var Colors = [];
+        //var Colorloop = $("input[name=child]:text");
+        //$.each(Colorloop, function (key, item) {
+
+        //    Colors.push(item.value);
+        //});
+        var Name = $("#Name").val();
+        var Description = $("#Discreption").val();
+        var Brand = $("#Brand").val();
+        var Maretial = $("#Material").val();
+        var Type = $("#Type").val();
+        var Warranty = $("#Warranty").val();
+
+        $(".error").remove();
+        if (Name.length < 1) {
+            $('#Name').after('<span class="text-danger error" >This field is required </span>');
+            return;
+        }
+
+        if (Description.length < 1) {
+            $('#Discreption').after('<span class="text-danger error"  >This field is required </span>');
+            return;
+        }
+
+        if (Brand.length < 1) {
+            $('#Brand').after('<span class="text-danger error"  >This field is required </span>');
+            return;
+        }
+        if (Type.length < 1) {
+            $('#Type').after('<span class="text-danger error"  >This field is required </span>');
+            return;
+        }
+        if (Maretial.length < 1) {
+            $('#Material').after('<span class="text-danger error"  >This field is required </span>');
+            return;
+        }
+        if (Warranty.length < 1) {
+            $('#Warranty').after('<span class="text-danger error"  >This field is required </span>');
+            return;
+        }
+
+
+        var file = $("#Image").get(0).files;
+        var files = $("#Images").get(0).files;
+        var color = $("#Color").val();
+
+        var data = new FormData;
+        data.append("Name", Name);
+        data.append("SubCategoryId", $("#SubCategory").val());
+        data.append("Type", Type);
+        data.append("Brand", Brand);
+        data.append("Material", Maretial);
+        data.append("Description", Description);
+        data.append("Warranty", Warranty);
+        if (Variactions != null) {
+            (Variactions).forEach(I => {
+                data.append("Variactions", I);
+            });
+        }
+
+        data.append("Image", file[0])
+        for (var i = 0; i < files.length; i++) {
+            data.append("Images", files[i]);
+        }
+        console.log(data);
+
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            async: true,
+            data: data,
+            type: 'post',
+            url: '/Home/AddProduct',
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#Name").val("");
+                $("#Quantity").val("");
+                $("#Price").val("");
+                $("#SubCategory").val("");
+                $("#Image").val("");
+                $("#Discreption").val("");
+                $("#Size").val("");
+                console.log(data);
+                HideModalPopUp();
+                ShowData();
+                location.reload(true)
+            },
+            error: function () {
+                alert("something went wrong");
+                HideModalPopUp();
+                ShowData();
+            },
+        });
+    };
+    // for popup
+    function HideModalPopUp() {
+        $("#ProductModal").modal('hide');
+        location.reload(true)
+        ShowData();
+    };
+    // for delete product
+    function Delete(id) {
+        debugger
+        var token = sessionStorage.getItem('Token');
+
+        var ans = confirm("Are you sure you want to delete this Record?");
+        if (ans) {
+            $.ajax({
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                url: '/Home/DeleteProduct?id=' + id,
+                success: function () {
+                    ShowData();
+                    location.reload(true)
+
+                },
+                error: function () {
+                    alert("Something went b wrong!");
+                    HideModalPopUp();
+                    ShowData();
+                },
+
+            });
+        };
+    };
+    // for edit get the detail
+    function Edit(id) {
+        debugger
+        GetSubCategory();
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            url: '/Home/EditProduct?id=' + id,
+            type: 'Get',
+            success: function (response) {
+                debugger
+                console.log(response);
+                $("#ProductModal").modal("show");
+                //$.each(response.Products, function (data, obj) {
+                //      console.log(obj);
+                //});
+
+                $("#Id").val(response.Products.Id);
+                $("#Name").val(response.Products.Name);
+                $("#Quantity").val(response.Products.Quantity);
+                $("#Price").val(response.Products.Price);
+                $("#SubName").append(response.subCategory.Name);
+                //// $("#SubCategory").append('<Option value=' + obj.Id + '>' + obj.Name + '</Option>');
+                ////$.each(response.Colors, function (data, obj) {
+                ////    $("#Color").append(obj.Color);
+                //////});
+                ////$.each(response.Colors, function (data, obj) {
+                ////    console.log(obj);
+                ////    $("#SelectColor").append(obj.Color);
+                ////    alert(obj.Color);
+                ////});
+                $("#Discreption").val(response.Products.Description);
+                $("#image").append("<img height='60'  src =" + response.Products.Image + "> </img>");
+                $("#Type").val(response.ProductType.Type);
+                $("#TypeId").val(response.ProductType.Id);
+                $("#Brand").val(response.ProductBrand.Brand);
+                $("#BrandId").val(response.ProductBrand.Id);
+                $("#Material").val(response.ProductMaterial.Material);
+                $("#MaterialId").val(response.ProductMaterial.Id);
+                $("#Warranty").val(response.Warranty);
+                $("#Specification").val(response.Specification);
+                $.each(response.Images, function (data, obj) {
+                    //$("#imagesId").val(obj.Id)
+                    // console.log(obj);
+                    $("#image1").append("<img height='60'  width='60' src =" + obj + "> </img>");
+                });
+
+
+                $("div2").hide();
+                $("#Submit").hide();
+                $("#ShowVariaction").hide();
+                $("#Spaci").hide();
+                $('#btnAdd').hide();
+                $('#btnUpdate').show();
+                $("h3").hide();
+                $("h4").hide();
+                $("h2").show();
+            },
+            error: function () {
+                alert("Something went b wrong!");
+                HideModalPopUp();
+                ShowData();
+            },
+
+        });
+    };
+    // for
+    function UpdateProduct() {
+        debugger
+
+        var file = $("#Image").get(0).files;
+        var files = $("#Images").get(0).files;
+        var data = new FormData;
+        data.append("Id", $("#Id").val());
+        data.append("Name", $("#Name").val());
+        data.append("SubCategoryId", $("#SubCategory").val());
+        data.append("Description", $("#Discreption").val());
+        data.append("Type", $("#Type").val());
+        data.append("Brand", $("#Brand").val());
+        data.append("Material", $("#Material").val());
+        data.append("Specification", $("#Specification").val());
+        data.append("Warranty", $("#Warranty").val());
+
+
+        for (var i = 0; i < files.length; i++) {
+            data.append("Images", files[i]);
+        }
+        console.log(data);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            data: data,
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            async: true,
+            dataType: 'Json',
+            type: 'post',
+            url: '/Home/Update',
+            processData: false,
+            contentType: false,
+            success: function (data) {
+                $("#Name").val("");
+                $("#SubCategory").val("");
+                $("#Image").val("");
+                $("#Discreption").val("");
+                HideModalPopUp();
+                ShowData();
+            },
+            error: function () {
+                alert("something went wrong");
+                HideModalPopUp();
+                ShowData();
+            },
+
+        });
+    };
+    function VariactionsAdd(id) {
+        debugger
+        $("#Id").val(id);
+        //var token = sessionStorage.getItem('Token');
+        //  $.ajax({
+        //      headers: {
+        //         Authorization: 'Bearer ' + token
+        //      },
+        //        url: '/Home/VariactionsList?id=' + id,
+        //     type: 'Get',
+        //    success: function (response) {
+        $("#ProductModal").modal("show");
+        $("h2").hide();
+        $("h3").hide();
+        $("#btnAdd").hide();
+        $("#btnUpdate").hide();
+        $("div1").hide();
+        //}
+        // });
+    }
+    function AddInventry() {
+        debugger
+        var Variactions = [];
+        // var Color= {
+        //            color :'' ,
+        //            Quantity :'',
+                  
+        // };
+       
+        //var Variactions = {
+        //    Variaction: '',
+        //      Price :'' ,
+        //        Colors: [],
+            
+
+        //};
+       
+        var Variactionloop = $("input[name=child]:text");
+        //var price = $("input[name=price]:text").val();
+        //var Colorloop = $("input[name=Field]:text");
+        //var quantity = $("input[name=Quantityy]:text");
+        debugger
+     //    datapush.Colors.push(Colorloop);
+     ////   $.each(Variactionloop, function (key, item) {
+          
+     //        console.log(Variactionloop);
+     //    debugger
+     //   Variactions.Variaction = Variactionloop;
+     //   Variactions.Price = price;
+        $.each(Variactionloop, function (key, item) {
+        //    debugger
+        //      console.log(item.value);
+        //       Color.color = item.value;
+        //          debugger
+        //datapush.Colors.push(Color.color);
+           Variactions.push(item.value);
+          });
+        //        $.each(quantity, function (key, obj) {
+        //              console.log(obj.value);
+        //              debuggere;
+        //           Color.Quantity = obj.value;
+        //    datapush.quantityes.push(Color.Quantity);
+        //        });
+              
+      
+        // debugger
+        //data.push(Variactions);
+        // console.log(data);
+        //   debugger
+        //Variactions.Colors.push(Color);
+       // });
+        //    //$.each(Quantity, function (key, item) {
+
+        //    //    Quantityy.push(item.value);
+        //    //});
+//console.log(item);
+           // Variactions.Name.push(item);
+        //    // Variactions.push(Colors);
+         
+
+
+
+        //$.each(data, function (key, obj) {
+        //    console.log(obj);
+        //});
+        //var Pricee = []
+        //var Price = $("input[name=price]:text").val();
+
+        //$.each(Price, function (key, item) {
+
+        //    Pricee.push(item.value);
+        //});
+        //      var Variaction = $("#Variaction").val();
+        //if (Quantity.length < 1) {
+        //    $('#Quantity').after('<span class="text-danger error" >This field is required </span>');
+        //    return;
+        //}
+        //if (Price.length < 1) {
+        //    $('#Price').after('<span class="text-danger error" >This field is required </span>');
+        //    return;
+        //}
+
+        // data.append("Id", $("#Id").val());
+        //data.push(Quantity);
+        //data.push(Price);
+        //if (Variactions != null) {
+        //    (Variactions).forEach(I => {
+        //        data.push(I);
+        //    });
+        //}
+        //if (Colors != null) {
+        //    (Colors).forEach(I => {
+        //        data.push(I);
+        //    });
+        //} if (Pricee != null) {
+        //    (Pricee).forEach(I => {
+        //        data.push(I);
+        //    });
+        //} if (Quantityy != null) {
+        //    (Quantityy).forEach(I => {
+        //        data.push(I);
+        //    });
+        //}
+        var data = new FormData;
+        
+        data.append("Id", $("#Id").val());
+        data.append("Quantity", $("#Quantity").val());
+        data.append("Price", $("#Price").val());
+        data.append("Specification", $("#Specification").val());
+        if (Variactions != null) {
+            (Variactions).forEach(I => {
+                data.append("Variactions", I);
+            });
+        }
+        console.log(data);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+           async: true,
+            type: 'post',
+            data :data,
+            url: '/Home/AddToInventry',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                HideModalPopUp();
+                ShowData();
+            }
+        });
+    }
+    $("#rowAdder").click(function () {
+        newRowAdd =
+            '<div id="row"> <div class="input-group m-3">' +
+            '<div class="input-group-prepend">' +
+            '<button class="btn btn-danger" id="DeleteRow" type="button">' +
+            '<i class="bi bi-trash"></i> Delete</button> </div>' +
+            '<input type="text"   class="form-control"  name="child"  m-input">' +
+            '<input type="text" placeholder="Enter Price"  name="price" class="form-control"/> </div></div>';
+            //'<button onclick="ColorAdder()" type="button" class="btn btn-dark"><span class="bi bi-plus-square-dotted"></span> Add More Fields </button>' +
+           // '<div class="inputColor"></div>
+
+
+
+
+
+        $('#newinput').append(newRowAdd);
+    });
+
+    $("body").on("click", "#DeleteRow", function () {
+        $(this).parents("#row").remove();
+    })
+    //function ColorAdder() {
+
+    //    RowAdd =
+    //        '<div id="rowColor"> <div class="input-group m-3">' +
+    //        '<div class="input-group-prepend">' +
+    //        '<button class="btn btn-danger" id="Delete" type="button">' +
+    //        '<i class="bi bi-trash"></i> Delete</button> </div>' +
+    //        '<input type="text"   class="form-control"  name="Field"  m-input">' +
+    //        '<input type="text" placeholder="Enter Quantity" name="Quantityy" class="form-control"  s-input">' +
+    //        '</div> </div>';
+
+
+
+
+    //    $('.inputColor').append(RowAdd);
+    //}
+
+    //$("body").on("click", "#Delete", function () {
+    //    $(this).parents("#rowColor").remove();
+    //})
+
+</script>

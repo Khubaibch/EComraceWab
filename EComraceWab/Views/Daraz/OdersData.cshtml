@@ -1,0 +1,331 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        debugger
+
+        Oders();
+
+    });
+    function Oders() {
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/OdersData',
+            success: function (response) {
+                debugger
+                console.log(response);
+
+                var email ='';
+                var City ='';
+                var address ='';
+                var phoneNumber = '';
+                var firstname = '';
+                var Lastname = '';
+              
+                var Status = '';
+                var items = '';
+                var MiliSeconds = 6.048e+8;
+                var date = new Date;
+                    var TotalQuantity=0;
+                var TotalPrice = 0;
+                    var      pament=0;
+               
+                $.each(response, function (item, obj) {
+                    email = (obj.Email);
+                    City = (obj.City);
+                    address = (obj.Address);
+                    phoneNumber = (obj.PhoneNumber);
+                    firstname = (obj.FirstName);
+                    Lastname = (obj.LastName);
+                    console.log(obj);
+                    Status = (obj.Store.Oders.Status);
+                    items += '  <article class="card border-primary mb-4">';
+                    items += '<div class="card-body" >';
+                    items += '<ul class="row" >';
+                    items += '<header class="d-lg-flex" >';
+                    items += '<div class="flex-grow-1" >';
+                    items += "<h6 class='mb-0' >Order ID:" + obj.Store.Oders.Id + "</h6>";
+                    items += "<h6 class='mb-0 text-danger' >" + Status + "</h6>";
+                        
+                    
+                    items += "<span class='text-muted' > Date: " + (formatDate(obj.Store.Oders.DateTime)) + "</span>";
+                    items += '</div>';
+                    items += '<div>';
+                    items += "<a  class='btn btn-sm btn-outline-danger' onclick=Cancel(" + obj.Store.Oders.Id + ")> Cancel order </a>";
+                    // item +=        <a href = "#" class="btn btn-sm btn-primary" > Track order < /a>
+                    items += '</div>';
+                    items += '</header>';
+                    items += '<hr>';
+                    items += '<div class="row" >';
+                    items += '<div class="col-lg-4" >';
+                    items += '<p class="mb-0 text-muted" > Contact </p>';
+                    items += "<p class='m-0'>" + obj.Store.Oders.FirstName + "<br>Email: " + obj.Store.Oders.Email + "<br>Phone: " + obj.Store.Oders.PhoneNumber + "</p>";
+                    items += '</div>';
+                    items += '<div class="col-lg-4 border-start" >';
+                    items += '<p class="mb-0 text-muted" > Shipping address </p>';
+                    items += "<p class='m-0'>" + obj.Store.Oders.City + "<br>" + obj.Store.Oders.Address + "</p>";
+                    items += '</div>';
+                    items += '<div class="col-lg-4 border-start" >';
+                    items += '<p class="mb-0 text-muted" >Payment </p>';
+                    items += '<p class="m-0" >';
+                    items += '<span class="text-success" >Visa *** 4216 </span> <br>';
+                    items += "Shipping fee:" + pament + "<br>";
+                    items += 'Total paid: $456';
+                    items += '</p>';
+                    items += '</div>';
+                    items += '</div>';
+                    items += "<hr>";
+                    for (let x in obj.Store.Oders.Product) {
+                        debugger
+                        console.log(obj.Store.Oders.Product[x]);
+                        var Quantity = (obj.Store.Oders.Product[x].Quantity);
+                        var Price = (obj.Store.Oders.Product[x].Variaction.Inventrys.Price);
+                        var total = (Quantity * Price);
+                        var Shipping = (Quantity * 50);
+                          TotalQuantity += Quantity;
+                        TotalPrice += total;
+                        items += '<li class="col-xl-4  col-lg-6" >';
+                        items += (obj.Store.Oders.Status == 'Pending') ? "<button type='button' class='btn-close' aria-label='Close'  onclick=DeleteItem(" + obj.Store.Oders.Product[x].Id + ")></button>                 "  :'';
+                        items += ((date - (new Date(obj.Store.Oders.DateTime))) <= MiliSeconds) ?  ((obj.Store.Oders.Status == 'Received')?"<a class='btn btn-warning' onclick=Return(" + obj.Store.Oders.Product[x].Id + ")><i class='bi bi-arrow-return-left'></i>  Return</a>" : ''):'';
+                        items += '<figure class="itemside mb-3" >';
+                        items += '<div class="aside" >';
+                        items += "<img width='72' height = '72' src = " + obj.Store.Oders.Product[x].Image + " class='img-sm rounded border'/>";
+                        items += '</div>';
+                        items += '<figcaption class="info" >';
+                        items += "<p class='title' >" + obj.Store.Oders.Product[x].Name + "</p>";
+                        items += "<div class='price text-muted'>" + obj.Store.Oders.Product[x].Variaction.Variaction + "</div>";
+                        items += "<strong>" + Quantity + "x = Rs." + total + "</strong>";
+                        items += (obj.Store.Oders.Status == 'Received') ? "<a class='btn btn-success' href='/Daraz/Home?Id=" + obj.Store.Oders.Product[x].ProductId + "'>Review</a>" : '';
+                        items += '</figcaption>';
+                        items += '</figure>';
+                        items += '</li>';
+
+                    } debugger
+
+                    
+                    items += '</ul>';
+                    items += '</div>';
+                    items += '</article>';
+                   
+                    pament = TotalPrice;
+                });
+                
+                var fullname = (firstname + ' ' + Lastname);
+                var Email = ('Email: ' + email + ' Phone: ' + phoneNumber);
+                var Address = ('Address: ' + City + '  ' + address);
+                var Contect = (fullname)
+                $("#Name").append(fullname);
+                $("#Email").append(Email);
+                $("#Address").append(Address);
+                $("#Oder").append(items);
+                //if (Status == 'Shipped') {
+                //    $("#Oder").empty();
+                //}
+               
+            }
+        });
+    }
+    function formatDate(DateTime) {
+        var d = new Date(DateTime),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    };
+    function Cancel(id) {
+        var data = new FormData;
+        data.append("Id", $("#OderItemId").val());
+        data.append("OderItemId", $("#OderItemId").val());
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/OdersCancel?Id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+                location.reload(true);
+            }
+        });
+    }
+    function Ratings(id) {
+        debugger
+         var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/Ratings?Id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+
+            }
+        });
+    }  
+    function DeleteItem(id) {
+        debugger
+         var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/DeleteItem?Id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+                location.reload(true);
+            }
+        });
+    } 
+    function LogOut() {
+        debugger
+        window.sessionStorage.clear();
+        window.location.href = '/Daraz/Home';
+    };
+     function Return(id) {
+        debugger
+        $("#OderItemId").val(id)
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            type: "Get",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            url: '/Daraz/Return?id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+                if(response != null){
+                $('#Modal').modal('show');
+                $("#Image").append(" <img width='72' height='72' src=" + response.Image + " class='img - sm rounded border'/>");
+                $("#name").append(response.Name);
+                }
+            }
+        });
+    }
+     function Reviewdata() {
+        debugger
+        var data = new FormData;
+        data.append("Reson", $("#Reson").val());
+        data.append("Quantity", $("#Quantity").val());
+        data.append("OderItemId", $("#OderItemId").val());
+        console.log(data);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            type: "post",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            async: true,
+            data: data,
+            url: '/Daraz/ReturnData',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+              
+            }
+        });
+    
+    
+    }
+     function HideModalPopUp() {
+        $('#LoginModal').modal('hide');
+    }
+</script>
+<section class="padding-y bg-light">
+    <div class="container">
+
+        <div class="row">
+            <aside class="col-lg-3 col-xl-3">
+                <!--  COMPONENT MENU LIST  -->
+                <nav class="nav flex-lg-column nav-pills mb-4">
+                    @*   <a class="nav-link active" href="#">Account main</a>*@
+                    <a class="nav-link" href="/Daraz/Ordershistory">Orders history</a>
+                    <a class="nav-link" href="/Daraz/Wishes">My wishlist</a>
+                     <a class="nav-link" href="/Daraz/BuyerChats">My Chats</a>
+                    <a class="nav-link" href="/Daraz/Profile">Profile setting</a>
+                    <a class="nav-link" href="#" onclick="LogOut();">Log out</a>
+                </nav>
+                <!--   COMPONENT MENU LIST END .//   -->
+            </aside>
+            <main class="col-lg-9  col-xl-9">
+                <article class="card">
+                    <div class="content-body" id="Oder">
+
+                        <figure class="itemside align-items-center">
+
+                            <figcaption class="info">
+                                <h6 class="title" id="Name"></h6>
+                                <p id="Email">
+                                </p>
+                            </figcaption>
+                        </figure>
+
+                        <hr>
+
+                        <div class="row g-2 mb-3">
+                            <div class="col-md-6">
+                                <article class="box  bg-light" id="Address">
+                                </article>
+                            </div> <!-- col.// -->
+                        </div> <!-- row.// -->
+                        <hr class="my-4">
+
+                        <h5 class="card-title"> Your orders </h5>
+                        <!--  ======== item order ======== -->
+                        <!--  ======== item order .// ======== -->
+                        <!--  ======== item order ======== .// -->
+
+
+
+                    </div> <!-- card-body .// -->
+                </article> <!-- card .// -->
+            </main>
+        </div> <!-- row.// -->
+
+        <br><br>
+
+
+    </div> <!-- container .//  -->
+</section>
+<div class="modal fade modal" id="Modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type='button' class='btn-close' aria-label='Close' onclick="HideModalPopUp();" data-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                <div class="aside" id="Image">
+                </div>  <p class="title" id="name">  </p>
+               
+                <div class="input-group mb-3">
+                    <input class="form-control" id="Reson" name="" placeholder="Enter  Reson" value="">
+                    <input class="form-control" id="OderItemId" hidden>
+                </div>
+                <div class="input-group mb-3">
+                    <input class="form-control" id="Quantity" name="" placeholder="Enter Return Quantity" value="">
+                    <input class="form-control" id="ProductId" hidden>
+                </div>
+                
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" onclick="Reviewdata()" class="btn btn-primary btn-user btn-block">
+                    Submit
+                </button>
+                <input type="text" hidden id="Ratings" />
+            </div>
+        </div>
+    </div>
+</div>

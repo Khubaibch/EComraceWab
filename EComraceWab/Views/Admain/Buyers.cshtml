@@ -1,0 +1,73 @@
+﻿
+
+@{
+    Layout = "~/Views/Shared/AdmainLayout.cshtml";
+}
+<script>
+  $(document).ready(function () {
+        debugger
+        $("#AsineDiv").hide();
+        Oders();
+
+    });
+    function Oders() {
+        let url_str = window.location.href;
+        let url = new URL(url_str);
+        let search_params = url.searchParams;
+
+        let id = search_params.get('id');
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Admain/BuyersData?id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+                var html = '';
+               
+                $.each(response, function (key, obj) {
+                    var Store ='';
+                    html += ' <tr>  ';
+                    html += ' <td>' + obj.User.FirstName + '  ' + obj.User.LastName + '</td>';
+                    html += '<td> ' + obj.User.Email + ' </td>';
+                    html += "<td><a  class='btn btn-primary' href='/Admain/BuyerHistory?Id=" + obj.User.Id + "'> Oders </a></td>";
+                   html += '</tr>';
+                });
+                $("#tbody").append(html);
+               
+                  
+                
+            }
+            
+        });
+    }
+</script>
+
+       
+                        <h4 class="card-title mb-4">All Sellers</h4>
+                <table id="myTable" class="table table-bordered table-hover">
+                    <thead>
+                        <tr>
+
+                            <th>
+                                UserName
+                            </th>
+                            <th>
+                               Email
+                            </th>
+                           
+                            <th>
+                               Oders
+                            </th>
+                            
+                        </tr>
+                    </thead>
+                    <tbody id="tbody">
+                    </tbody>
+                </table>
+
+                   
+

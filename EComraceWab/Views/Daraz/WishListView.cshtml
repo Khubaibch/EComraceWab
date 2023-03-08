@@ -1,0 +1,103 @@
+﻿@model EComraceWab.Models.Items
+
+
+@{
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        debugger
+        WishList();
+
+    });
+   
+    function WishList() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/WishListView',
+            success: function (response) {
+                debugger
+                console.log(response);
+                var items = '';
+                $.each(response, function (key, obj) {
+                    console.log(obj.Product.Image);
+                    items += '<article class="row gy-3 mb-4"  >'
+                    items += '<div class="col-lg-5">';
+                    items += '<figure class="itemside me-lg-5">';
+                        items += "<div class='aside'><img height='100'  src =" + obj.Product.Image + "> </img> </div>";
+                    items += '<figcaption class="info">';
+                        items += "<a  class='title' >" + obj.Product.Description + "</a>";
+                    items += "<p class='text-muted'> Rs." + obj.Product.Variaction.Inventrys.Price + "</p>";
+                    items += '</figcaption>';
+                    items += ' </figure>';
+                    items += '</div>';
+                    items += '<div class="col-lg col-sm-4">';
+                    items += '<div class="float-lg-end">';
+                    items += '<a href="#" class="btn btn-light text-danger"  onclick="Remove(' + obj.Id + ')" > Remove</a>';
+                    items += '</div>';
+                    items += '</div>';
+                    items += ' </article>';
+                });
+                $("#Items").append(items);
+            }
+        });
+    }
+    function Remove(id) {
+        debugger
+        var token = sessionStorage.getItem('Token');
+
+        var ans = confirm("Are you sure you want to delete this Record?");
+        if (ans) {
+            $.ajax({
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                url: '/Daraz/RemoveItemInWishlist?id=' + id,
+                success: function () {
+                    location.reload(true)
+
+                },
+                error: function () {
+                    alert("Something went b wrong!");
+                },
+
+            });
+        };
+    };
+  
+</script>
+
+<section class="padding-y bg-light" id="Cart">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-9">
+
+                <div class="card">
+                    <div class="content-body" id="Items">
+                        <h4 class="card-title mb-4">Your Wishes</h4>
+                        <div class="form-group">
+                            <input type="text" id="checkprice" hidden class="form-control" disabled="disabled" />
+                        </div>
+
+                    </div> <!-- card-body .// -->
+
+                   
+
+                </div> <!-- card.// -->
+
+            </div> <!-- col.// -->
+           
+
+        </div> <!-- row.// -->
+        <!-- =================== COMPONENT 1 CART+SUMMARY .//END  ====================== -->
+
+        <br>
+        <br>
+
+    </div> <!-- container .//  -->
+</section>

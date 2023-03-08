@@ -1,0 +1,500 @@
+﻿@{
+    Layout = "~/Views/Shared/AdmainLayout.cshtml";
+}
+
+<style>
+
+    .container {
+        margin: 60px auto;
+        background: #fff;
+        padding: 0;
+        border-radius: 7px;
+    }
+
+    .profile-image {
+        width: 50px;
+        height: 50px;
+        border-radius: 40px;
+    }
+
+    .settings-tray {
+        background: #eee;
+        padding: 10px 15px;
+        border-radius: 7px;
+        .no-gutters
+
+    {
+        padding: 0;
+    }
+
+    &--right {
+        float: right;
+        i
+
+    {
+        margin-top: 10px;
+        font-size: 25px;
+        color: grey;
+        margin-left: 14px;
+        transition: .3s;
+        &:hover
+
+    {
+        color: $blue;
+        cursor: pointer;
+    }
+
+    }
+    }
+    }
+
+    .search-box {
+        background: #fafafa;
+        padding: 10px 13px;
+        .input-wrapper
+
+    {
+        background: #fff;
+        border-radius: 40px;
+        i
+
+    {
+        color: grey;
+        margin-left: 7px;
+        vertical-align: middle;
+    }
+
+    }
+    }
+
+    input {
+        border: none;
+        border-radius: 30px;
+        width: 80%;
+        &::placeholder
+
+    {
+        color: #e3e3e3;
+        font-weight: 300;
+        margin-left: 20px;
+    }
+
+    &:focus {
+        outline: none;
+    }
+
+    }
+
+    .friend-drawer {
+        padding: 10px 15px;
+        display: flex;
+        vertical-align: baseline;
+        background: #fff;
+        transition: .3s ease;
+        &--grey
+
+    {
+        background: #eee;
+    }
+
+    .text {
+        margin-left: 12px;
+        width: 70%;
+        h6
+
+    {
+        margin-top: 6px;
+        margin-bottom: 0;
+    }
+
+    p {
+        margin: 0;
+    }
+
+    }
+
+    .time {
+        color: grey;
+    }
+
+    &--onhover:hover {
+        background: $blue;
+        cursor: pointer;
+        p, h6, .time
+
+    {
+        color: #fff !important;
+    }
+
+    }
+    }
+
+    hr {
+        margin: 5px auto;
+        width: 60%;
+    }
+
+    .chat-bubble {
+        padding: 10px 14px;
+        background: #eee;
+        margin: 10px 30px;
+        border-radius: 9px;
+        position: relative;
+        animation: fadeIn 1s ease-in;
+        &:after
+
+    {
+        content: '';
+        position: absolute;
+        top: 50%;
+        width: 0;
+        height: 0;
+        border: 20px solid transparent;
+        border-bottom: 0;
+        margin-top: -10px;
+    }
+
+    &--left {
+        &:after
+
+    {
+        left: 0;
+        border-right-color: #eee;
+        border-left: 0;
+        margin-left: -20px;
+    }
+
+    }
+
+    &--right {
+        &:after
+
+    {
+        right: 0;
+        border-left-color: $blue;
+        border-right: 0;
+        margin-right: -20px;
+    }
+
+    }
+    }
+
+    keyframes fadeIn {
+        0%
+
+    {
+        opacity: 0;
+    }
+
+    100% {
+        opacity: 1;
+    }
+
+    }
+
+
+    .offset-md-9 {
+        .chat-bubble
+
+    {
+        background: $blue;
+        color: #fff;
+    }
+
+    }
+
+    .chat-box-tray {
+        background: #eee;
+        display: flex;
+        align-items: baseline;
+        padding: 10px 15px;
+        align-items: center;
+        margin-top: 19px;
+        bottom: 0;
+        input
+
+    {
+        margin: 0 10px;
+        padding: 6px 2px;
+    }
+
+    i {
+        color: grey;
+        font-size: 30px;
+        vertical-align: middle;
+        &:last-of-type
+
+    {
+        margin-left: 25px;
+    }
+
+    }
+    }
+    .button5 {border-radius: 50%;
+      background-color: #04AA6D;
+  border: none;
+     color: white;
+  padding: 6px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 13px;
+  margin: 3px 1px;
+    }
+</style>
+<script>
+    $(document).ready(function () {
+        debugger
+        $("#AsineDiv").hide();
+
+        Messagess();
+        AsinAdmin();
+    });
+    function Messagess() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Admain/AdmainMessageCenterData',
+            success: function (response) {
+                console.log(response);
+                var data = '';
+                var Userdata = '';
+                $.each(response.UserRoom, function (key, obj) {
+                      console.log(obj);
+                    data += '<div class="friend-drawer friend-drawer--onhover">';
+                    data += "<a href='#' onclick='UserMessages(" + obj.Id + ")' class='text'>";
+                    data += "<img class='profile-image'  src=" + obj.User.Image + " >";
+                    data += '<span class="settings-tray--right">';
+                    data += "<i class='material-icons'> " + obj.User.FirstName + "</i>";
+                    data += '</span>';
+                   // data += "<p class='text-muted'>" + obj.Comment + "</p>";
+                    data += '</a>';
+                    data += '</div>';
+                    data += '<hr>';
+                });
+                $.each(response.GuestRoom, function (key, obj) {
+                    data += '<div class="friend-drawer friend-drawer--onhover">';
+                    data += "<a href='#' onclick='UserMessages(" + obj.Id + ")' class='text'>";
+                    data += '<img class="profile-image" src="https://static.thenounproject.com/png/5034901-200.png">';
+                    data += '<span class="settings-tray--right">';
+                    data += "<i class='material-icons'> " + obj.GuestId + "</i>";
+                    data += '</span>';
+                   // data += "<p class='text-muted'>" + obj.Comment + "</p>";
+                    data += '</a>';
+                    data += '</div>';
+                    data += '<hr>';
+                });
+                $("#AllMessages").append(data);
+                Userdata += "<img class='profile-image'  src=" + response.User.Image + " >";
+                Userdata += '<span  class="settings-tray--right">';
+                Userdata += "<i class='material-icons'> " + response.User.FirstName + "</i>";
+                Userdata += '</span>';
+                $("#Admain").append(Userdata);
+            }
+        });
+    }
+    function AsinAdmin() {
+        debugger
+        var id = 4;
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Admain/All_Admains?id=' + id,
+            success: function (response) {
+                $("#All_Admain").empty();
+                $.each(response, function (data, obj) {
+                    console.log(data);
+                    console.log(obj);
+                    $("#All_Admain").append('<Option value=' + obj.User.Id + '>' + obj.User.FirstName + '</Option>');
+                });
+            }
+        });
+    }
+    function formatDate(createdDate) {
+        var d = new Date(createdDate),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    };
+    function UserMessages(id) {
+        debugger
+        $("#AsineDiv").show();
+        AsinAdmin();
+        $("#RoomId").val(id);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Admain/UserSendMessagetoAdmain?id=' + id,
+            success: function (response) {
+                console.log(response);
+                debugger
+              
+               
+                if(response.RoomChat != null)
+                {
+                      var dataa = '';
+                    var Userdata = '';
+                    debugger
+                    Userdata += '<div class="friend-drawer no-gutters friend-drawer--grey"  >';
+                    Userdata += '<img class="profile-image"  src="https://static.thenounproject.com/png/5034901-200.png" >';
+                    Userdata += '<div class="text">';
+                    Userdata += "<h6> " + response.GuestId+ "</h6>";
+                    Userdata += '</div>';
+                    Userdata += '</div>';
+                     $("#UserImage").empty();
+                $("#UserImage").append(Userdata);
+                    $.each(response.RoomChat, function (key, obj) {
+                        dataa += (obj.CreaterId == response.Id) ? "<div class='row no-gutters'><div class='col-md-auto offset-md-9'><div class='chat-bubble chat-bubble--right'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div></div></div>" : "<div class='row no-gutters'><div class='col-md-auto'><div class='chat-bubble chat-bubble--left'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div ></div></div>";
+
+
+
+
+
+                    });
+                    debugger
+                    $("#UserMessages").empty();
+                    $("#UserMessages").append(dataa);
+                }else{
+                    var data = '';
+                    var Userdata = '';
+                    debugger
+                  Userdata +=     '<div class="friend-drawer no-gutters friend-drawer--grey"  >';
+                    Userdata += "<img class='profile-image'  src=" + response.ChatsData.User.Image + " >";
+                Userdata += '<div class="text">';
+                Userdata += "<h6> " + response.ChatsData.User.FirstName + "</h6>";
+                Userdata += '</div>';
+                Userdata += '</div>';
+
+                $("#UserImage").empty();
+                $("#UserImage").append(Userdata);
+
+                $.each(response.ChatsData.Chat, function (key, obj) {
+                    data += (obj.CreaterId == response.Id) ? "<div class='row no-gutters'><div class='col-md-auto offset-md-9'><div class='chat-bubble chat-bubble--right'>" + obj.Comment + "<br><time class='time text-muted small '>" + (formatDate(obj.CreatedDate)) + "</time></div></div></div>" : "<div class='row no-gutters'><div class='col-md-auto'><div class='chat-bubble chat-bubble--left'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div></div></div>";
+
+
+
+
+
+                });
+                    debugger
+                $("#UserMessages").empty();
+                $("#UserMessages").append(data);
+                }
+            }
+
+        });
+
+    }
+    function SendMessage() {
+        debugger
+        var data = {
+            RoomId: $("#RoomId").val(),
+            Comment: $("#Message").val(),
+
+        };
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            data,
+            url: '/Admain/NewMessage',
+            success: function (response) {
+                console.log(response);
+                $("#Message").val('');
+                var data = '';
+                $.each(response.RoomChat, function (key, obj) {
+                    data += (obj.CreaterId == response.Id) ? "<div class='row no-gutters'><div class='col-md-auto offset-md-9'><div class='chat-bubble chat-bubble--right'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div></div></div>" : "<div class='row no-gutters'><div class='col-md-auto'><div class='chat-bubble chat-bubble--left'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div ></div></div>";
+
+
+
+
+
+                });
+                $("#UserMessages").empty();
+                $("#UserMessages").append(data);
+            }
+        });
+    }
+    function Asindata() {
+        debugger
+        var data = {
+            RoomId: $("#RoomId").val(),
+            CreaterId: $("select#All_Admain").find("option:selected").val(),
+        };
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            data,
+            url: '/Admain/AsinDataToAdmain',
+            success: function (response) {
+                console.log(response);
+                location.reload(true);
+            }
+        });
+
+    }
+
+</script>
+
+<div class="container">
+    <div class="row no-gutters">
+        <div class="col-md-4 border-right" id="AllMessages">
+          <div class="settings-tray" id="Admain">
+              
+            </div>
+          @*  <div class="search-box">
+                <div class="input-wrapper">
+                    <i class="material-icons">search</i>
+                    <input placeholder="Search here" type="text">
+                </div>
+            </div>*@
+        
+            <input type="text" id="RoomId" hidden class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-8">
+            <div class="settings-tray">
+                <div class="friend-drawer no-gutters friend-drawer--grey" id="UserImage">
+                  
+                </div>
+            </div>
+            <div class="chat-panel">
+                <div id="UserMessages">
+                   
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chat-box-tray">
+                            <input type="text" id="Message" placeholder="Type your message here...">
+                            <span class="input-group-btn">
+                                <button type="submit" class="button button5" onclick="SendMessage()">Send</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $('.friend-drawer--onhover').on('click', function () {
+
+        $('.chat-bubble').hide('slow').show('slow');
+
+    });
+</script>

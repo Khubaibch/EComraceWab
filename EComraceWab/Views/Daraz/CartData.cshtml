@@ -1,0 +1,240 @@
+﻿@model EComraceWab.Models.Items
+
+
+@{
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+<script>
+    $(document).ready(function () {
+        debugger
+        Cartdata();
+
+    });
+   
+    function Cartdata() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/CartData',
+            success: function (response) {
+                debugger
+                console.log(response);
+                var items = '';
+                var total = 0.0;
+             
+                debugger
+                console.log(total);
+
+                $.each(response, function (key, obj) {
+                    console.log(obj);
+                    var Quantity = (obj.Quantity);
+                    var Price = (obj.Product.Variaction.Inventrys.Price);
+                    var TotalPrice = (Quantity * Price);
+                    total += TotalPrice;
+                   
+                    //var Total = (TotalPrice + TotalPrice);
+                    //$("#Total").append(total);
+
+                    //if (let i = 0; i < TotalPrice;i++);
+                    $("#quantity").val(Quantity);
+
+                    console.log(TotalPrice);
+                    items += '<article class="row gy-3 mb-4"  >'
+                    items += '<div class="col-lg-5">';
+                    items += '<figure class="itemside me-lg-5">';
+                        items += "<div class='aside'><img height='100'  src =" + obj.Product.Image + "> </img> </div>";
+                    items += '<figcaption class="info">';
+                        items += "<a  class='title' >" + obj.Product.Name + "</a>";
+                    items += "<small class='text-muted'>" + obj.Product.Variaction.Variaction + "</small>";
+                    // $.each(obj.Colors, function (data, item) {
+                    //  items += "<p class='text-muted'>" + response.Colors[I].Color + "</p>";
+                    //  // });
+                    //  $.each(obj.Sizes, function (data, item) {
+                    //  items += "<p class='text-muted'>" + response.Sizes[v].Size + "</p>";
+                    // });
+                    items += '</figcaption>';
+                    items += ' </figure>';
+                    items += '</div>';
+                    items += '<div class="col">';
+                    items += '<input type="button" onclick="decrementValue(' + obj.Id + ')" value="-" />';
+                    items += "<input type='text' name='quantity' value=" + Quantity + "  maxlength='2' id='quantity"+ obj.Id+"' max='10' size='1' />";
+                    items += '<input type="button" onclick="incrementValue(' + obj.Id + ')" value="+" />';
+                    items += '</div>';
+                    items += '<div class="col-lg-2 col-sm-4 col-6">';
+                    items += '<div class="price-wrap lh-sm">';
+                    items += "<var class='price h6'>" + TotalPrice + "</var>"; 
+                    items +=  '<br>';
+                    items += "<small class='text-muted'>" + Price + "/Per item </small>";
+                    items += '</div>';
+                    items += '</div>';
+                    items += '</div>';
+                    items += '<div class="col-lg col-sm-4">';
+                    items += '<div class="float-lg-end">';
+                    items += '<a href="#" class="btn btn-light text-danger"  onclick="Remove(' + obj.Id + ')" > Remove</a>';
+                    items += '</div>';
+                    items += '</div>';
+                    items += ' </article>';
+                });
+                $("#Total").append(total);
+                $("#total").append(total);
+                $("#checkprice").val(total);
+                $("#Items").append(items);
+            }
+        });
+    }
+    function incrementValue(Id) {
+        debugger
+        var value = parseInt(document.getElementById('quantity'+Id).value, 10);
+        debugger
+        value = isNaN(value) ? 0 : value;
+        if (value < 10) {
+            value++;
+            document.getElementById('quantity'+Id).value = value;
+        }
+          var data ={
+            Quantity : value,
+            Id :Id,
+        };
+        var token = sessionStorage.getItem('Token');
+          $.ajax({
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                data,
+            url: '/Daraz/UpdateQuantity',
+            success: function (response) {
+                    location.reload(true)
+
+                },
+                error: function () {
+                    alert("Something went b wrong!");
+                },
+
+          });
+    }
+    function decrementValue(Id) {
+        debugger
+        var value = parseInt(document.getElementById('quantity'+Id).value, 10);
+        debugger
+        value = isNaN(value) ? 0 : value;
+        if (value > 1) {
+            value--;
+            document.getElementById('quantity'+Id).value = value;
+        }
+        var data ={
+            Quantity : value,
+            Id :Id,
+        };
+        var token = sessionStorage.getItem('Token');
+          $.ajax({
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                data,
+            url: '/Daraz/UpdateQuantity',
+            success: function (response) {
+                    location.reload(true)
+
+                },
+                error: function () {
+                    alert("Something went b wrong!");
+                },
+
+          });
+
+    }
+    function Remove(id) {
+        debugger
+        var token = sessionStorage.getItem('Token');
+
+        var ans = confirm("Are you sure you want to delete this Record?");
+        if (ans) {
+            $.ajax({
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                url: '/Daraz/RemoveItemInCart?id=' + id,
+                success: function () {
+                    location.reload(true)
+
+                },
+                error: function () {
+                    alert("Something went b wrong!");
+                },
+
+            });
+        };
+    };
+  
+</script>
+
+<section class="padding-y bg-light" id="Cart">
+    <div class="container">
+
+        <div class="row">
+            <div class="col-lg-9">
+
+                <div class="card">
+                    <div class="content-body" id="Items">
+                        <h4 class="card-title mb-4">Your shopping cart</h4>
+                        <div class="form-group">
+                            <input type="text" id="checkprice" hidden class="form-control" disabled="disabled" />
+                        </div>
+
+                    </div> <!-- card-body .// -->
+
+                    <div class="content-body border-top">
+                        <p><i class="bi bi-truck"></i>   Free Delivery within 1-2 weeks</p>
+                        <p class="text-muted">
+                            Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod
+                            tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam,
+                            quis nostrud exercitation ullamco laboris nisi ut aliquip
+                        </p>
+                    </div> <!-- card-body.// -->
+
+                </div> <!-- card.// -->
+
+            </div> <!-- col.// -->
+            <aside class="col-lg-3">
+
+               
+                <div class="card">
+                    <div class="card-body">
+                        <dl class="dlist-align">
+                            <dt>Total price:</dt>
+                            <dd class="text-end" id="Total"></dd>
+                        </dl>
+                       @* <dl class="dlist-align">
+                            <dt>Discount:</dt>
+                            <dd class="text-end text-success"> - $60.00 </dd>
+                        </dl>
+                        <dl class="dlist-align">
+                            <dt>TAX:</dt>
+                            <dd class="text-end"> $14.00 </dd>
+                        </dl>*@
+                        <hr>
+                        <dl class="dlist-align">
+                            <dt>Total:</dt>
+                            <dd class="text-end text-dark h5" id="total">  </dd>
+                        </dl>
+
+                        <div class="d-grid gap-2 my-3">
+                            <a href="/Daraz/Checkoute" class="btn btn-success w-100">Checkout </a>
+                            <a href="/Daraz/Home" class="btn btn-light w-100"> Back to shop </a>
+                        </div>
+                    </div> <!-- card-body.// -->
+                </div> <!-- card.// -->
+
+            </aside> <!-- col.// -->
+
+        </div> <!-- row.// -->
+        <!-- =================== COMPONENT 1 CART+SUMMARY .//END  ====================== -->
+
+        <br>
+        <br>
+
+    </div> <!-- container .//  -->
+</section>

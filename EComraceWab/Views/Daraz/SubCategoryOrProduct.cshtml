@@ -1,0 +1,334 @@
+﻿@model EComraceWab.Models.HomeView
+
+@{
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+
+<script>
+
+    function getid() {
+        debugger
+        let url_str = window.location.href;
+        let url = new URL(url_str);
+        let search_params = url.searchParams;
+
+        let id = search_params.get('Id');
+        $.ajax({
+            url: '/Daraz/SubCategoryOrProducts?id=' + id,
+            success: function (response) {
+
+            }
+        });
+    };
+</script>
+
+<section class="section-intro pt-3">
+    <div class="container">
+
+        <div class="row gx-3">
+            <main class="col-lg-9">
+                <article class="card-banner p-5 bg-primary" style="height: 350px">
+                    <div style="max-width: 500px">
+                        <h2 class="text-white">Great products with <br> best deals </h2>
+                        <p class="text-white">No matter how far along you are in your sophistication as an amateur astronomer, there is always one.</p>
+                        <a href="#" class="btn btn-warning"> View more </a>
+                    </div>
+                </article>
+            </main>
+            <aside class="col-lg-3">
+                <article class="card-banner h-100" style="background-color: var(--bs-warning)">
+                    <div class="card-body text-center">
+                        <h5 class="mt-3 text-white">Amazing Gifts</h5>
+                        <p class="text-white">No matter how far along you are in your sophistication</p>
+                        <a href="#" class="btn btn-outline-light"> View more </a>
+                    </div>
+                </article>
+            </aside>
+        </div> <!-- row //end -->
+
+    </div> <!-- container end.// -->
+</section>
+<section class="padding-y">
+    <div class="container">
+
+        <div class="row">
+            <aside class="col-lg-3">
+
+                <button class="btn btn-outline-secondary mb-3 w-100  d-lg-none" data-bs-toggle="collapse" data-bs-target="#aside_filter">Show filter</button>
+
+                <!-- ===== Card for sidebar filter ===== -->
+                <div id="aside_filter" class="collapse card d-lg-block mb-5">
+
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside1">
+                                <i class="icon-control bi bi-chevron-down"></i>   Related items
+                            </a>
+                        </header>
+                        <div class="collapse show" id="collapse_aside1">
+                            <div class="card-body">
+                                <ul class="list-menu" id="Category">
+                                </ul>
+                            </div> <!-- card-body.// -->
+                        </div> <!-- collapse.// -->
+                    </article> <!-- filter-group // -->
+
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside_brands">
+                                <i class="icon-control bi bi-chevron-down"></i>  Brands
+                            </a>
+                        </header>
+                        <div class="collapse show" id="collapse_aside_brands">
+                            <div class="card-body" onclick="Brand()" id="Brands">
+                            </div> <!-- card-body .// -->
+                        </div> <!-- collapse.// -->
+                    </article>
+
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside2">
+                                <i class="icon-control bi bi-chevron-down"></i>  Price
+                            </a>
+                        </header>
+                        <div class="collapse show" id="collapse_aside2">
+                            <div class="card-body">
+                                        <label for="max" class="form-label">Max</label>
+                                        <input class="form-control" id="Price" placeholder="$1,0000" type="number">
+                                <button class="btn btn-light w-100" onclick="Filter()" type="button">Apply</button>
+                            </div> <!-- card-body.// -->
+                        </div> <!-- collapse.// -->
+                    </article> <!-- filter-group // -->
+
+                    <article class="filter-group">
+                        <header class="card-header">
+                            <a href="#" class="title" data-bs-toggle="collapse" data-bs-target="#collapse_aside3">
+                                <i class="icon-control bi bi-chevron-down"></i>  Variations
+                            </a>
+                        </header>
+                        <div class="collapse show" id="collapse_aside3">
+                            <div class="card-body" onclick="Sizee()" oncli id="Size">
+                            </div> <!-- card-body.// -->
+                        </div> <!-- collapse.// -->
+                    </article>  
+
+                  
+
+                </div> <!-- card.// -->
+                <!-- ===== Card for sidebar filter .// ===== -->
+
+            </aside> <!-- col .// -->
+            <main class="col-lg-9">
+
+
+
+                <!-- ========= content items ========= -->
+                <div class="row" id="products">
+                </div> <!-- row end.// -->
+                <!-- ========= content items .// ========= -->
+
+
+
+            </main> <!-- col .// -->
+        </div> <!-- row .// -->
+
+    </div> <!-- container .//  -->
+</section>
+<div class="modal fade modal " id="error">
+    <div class="modal-dialog row no-gutters col-lg-2 col-md-12 ml-auto">
+        <div class="modal-content ">
+            <div class="alert alert-warning shadow my-3" role="alert" style="border-radius: 3px">
+                <div class="text-center">
+                    <svg width="3em" height="3em" viewBox="0 0 16 16" class="m-1 bi bi-cone-striped" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.97 4.88l.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z" />
+                    </svg>
+                </div>
+                <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Warning:</b>Please Login Account.</p>
+            </div>
+
+        </div>
+    </div>
+</div>
+<!-- ============== SECTION CONTENT END// ============== -->
+<script>
+    $(document).ready(function () {
+        debugger
+        getid();
+        $('#error').modal('hide');
+    });
+    function getid() {
+        debugger
+        let url_str = window.location.href;
+        let url = new URL(url_str);
+        let search_params = url.searchParams;
+
+        let id = search_params.get('Id');
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/SubCategoryOrProducts?id=' + id,
+            success: function (response) {
+                debugger
+                var item = '';
+                var items = '';
+                var Size = '';
+                var TotalSize = '';
+                var TotalColors = '';
+                var Colors = '';
+                var Brand = '';
+                var TotalBrand = '';
+
+                $.each(response, function (key, obj) {
+                    console.log(obj.SubCategoriess);
+                    TotalBrand = (obj.SubCategoriess.Brands);
+                    TotalVariactions = (obj.SubCategoriess.Variactions);
+                    TotalColors = (obj.SubCategoriess.Colors);
+                    item += '<li> ';
+                    item += "<a class='item-link text-center' href='/Daraz/Products?Id=" + obj.SubCategoriess.Id + "' >";
+                    //item += '<span class="icon mb-2 icon-md rounded">';
+                    //item += "<img width='32' height='32' src=" + obj.SubCategoriess.Image + ">";
+                    //item += '</span>';
+                    item += "<span class='text'>" + obj.SubCategoriess.Name + "</span>";
+                    item += '</a>';
+                    item += '</li>';
+                    for (let x in obj.SubCategoriess.Products) {
+                        console.log(obj.SubCategoriess.Products[x]);
+                        items += ' <div class="col-lg-3 col-md-6 col-sm-6" >';
+                        items += '<figure class="card-product-grid" >';
+                        items += "<a  class='item-link text-center'  href='/Daraz/ProductDetail?Id=" + obj.SubCategoriess.Products[x].Id + "'>";
+                        items += "<img height='170' class='mix-blend-multiply' src=" + obj.SubCategoriess.Products[x].Image + " />";
+                        items += '</a>';
+                        items += '<figcaption class="info-wrap border-top" >';
+                        items += "<a   class='float-end btn btn-light btn-icon'onclick='Wishlist(" + obj.SubCategoriess.Products[x].Id + ")' ><i class='bi bi-heart'></i> </a>";
+                        items += '<div class="price-wrap" >';
+                        items += "<span class='price' style ='color:red;' >Rs:" + obj.SubCategoriess.Products[x].Variaction.Inventrys.Price + "</span>";
+                        items += '</div>';
+                        items += "<p class='title mb-2'>" + obj.SubCategoriess.Products[x].Name + "</p>";
+                        items += '</figcaption>';
+                        items += '</figure>';
+                        items += '</div>';
+                    }
+                });
+                for (let s in TotalVariactions) {
+                    Size += '<label class="form-check mb-2">';
+                    Size += "<input class='form-check-input' type='checkbox' name='size'  value=" + TotalVariactions[s].Id + ">";
+                    Size += "<span class='form-check-label'>" + TotalVariactions[s].Variaction + " </span>";
+                    Size += '</label>';
+                }
+                //} for (let c in TotalColors) {
+                //    Colors += '<label class="form-check mb-2">';
+                //    Colors += "<input class='form-check-input' type='checkbox' name='color'  value=" + TotalColors[c].Id + ">";
+                //    Colors += "<span class='form-check-label'>" + TotalColors[c].Color + " </span>";
+                //    Colors += '</label>';
+                //}
+                for (let b in TotalBrand) {
+                    Brand += '<label class="form-check mb-2">';
+                    Brand += "<input class='form-check-input' type='checkbox' name='brand'  value=" + TotalBrand[b].Id + ">";
+                    Brand += "<span class='form-check-label'>" + TotalBrand[b].Brand + " </span>";
+                    Brand += '</label>';
+                }
+                $("#Size").append(Size);
+                //$("#Colors").append(Colors);
+                $("#Brands").append(Brand);
+
+                $("#Category").append(item);
+                $("#products").append(items);
+            }
+        });
+    }
+    function Wishlist(id) {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            type: "Get",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            url: '/Daraz/Wishlist?id=' + id,
+            success: function (result) {
+            },
+            error: function () {
+                $('#error').modal('show');
+                $("#error").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#error").slideUp(500);
+                    $('#error').modal('hide');
+                });
+            },
+        });
+    }
+    function Sizee() {
+        debugger
+        Filter();
+    }
+    function Brand() {
+        debugger
+        Filter();
+    }
+   
+
+    function Filter() {
+        debugger
+        var SizeIds = [];
+        var sizes = $("input[name=size]:checked");
+        $.each(sizes, function (key, item) {
+            if (item.checked == true) {
+
+                SizeIds.push(item.value);
+            }
+        });
+     
+        var BrandId = [];
+        var Brands = $("input[name=brand]:checked");
+        $.each(Brands, function (key, item) {
+            if (item.checked == true) {
+
+                BrandId.push(item.value);
+            }
+        });
+        var Price =$("#Price").val();
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            type: "post",
+            url: '/Daraz/Fillter',
+            data: { BrandId, SizeIds, Price },
+            success: function (response) {
+                console.log(response);
+                var items='';
+                $.each(response, function (key, obj) {
+                    items += ' <div class="col-lg-3 col-md-6 col-sm-6" >';
+                    items += '<figure class="card-product-grid" >';
+                    items += "<a  class='item-link text-center'  href='/Daraz/ProductDetail?Id=" + obj.Id + "'>";
+                    items += "<img height='170' class='mix-blend-multiply' src=" + obj.Image + " />";
+                    items += '</a>';
+                    items += '<figcaption class="info-wrap border-top" >';
+                    items += "<a   class='float-end btn btn-light btn-icon'onclick='Wishlist(" + obj.Id + ")' ><i class='bi bi-heart'></i> </a>";
+                    items += '<div class="price-wrap" >';
+                    items += "<span class='price' style ='color:red;' >Rs:" + obj.Variaction.Inventrys.Price + "</span>";
+                    items += '</div>';
+                    items += "<p class='title mb-2'>" + obj.Name + "</p>";
+                    items += '</figcaption>';
+                    items += '</figure>';
+                    items += '</div>';
+                });
+                $("#products").empty();
+                $("#products").append(items);
+            },
+            error: function () {
+                $('#error').modal('show');
+                $("#error").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#error").slideUp(500);
+                    $('#error').modal('hide');
+                });
+            },
+        });
+
+    }
+
+</script>
+

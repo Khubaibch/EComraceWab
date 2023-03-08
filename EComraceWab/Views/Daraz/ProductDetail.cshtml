@@ -1,0 +1,635 @@
+﻿@model EComraceWab.Models.Items
+
+@{
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+
+
+
+<!-- ============== SECTION CONTENT ============== -->
+<div id="detail">
+    <section class="padding-y">
+        <div id="Detail" class="container">
+
+            <div class="form-group">
+                <input type="text" id="Id" hidden class="form-control" disabled="disabled" />
+                <input type="text" id="StoreId" hidden class="form-control" disabled="disabled" />
+            </div>
+            <div class="row">
+                <aside class="col-lg-6">
+                    <article class="gallery-wrap">
+                        <div class="img-big-wrap img-thumbnail">
+                            <div data-fslightbox="mygalley" id="image" name="Image" data-type="image" href="">
+                            </div>
+                        </div> <!-- img-big-wrap.// -->
+                        <div class="thumbs-wrap  row">
+                            <div data-fslightbox="mygalley" data-type="image" href="" id="image1" class="item-thumb col">
+                            </div>
+
+                        </div> <!-- thumbs-wrap.// -->
+                    </article> <!-- gallery-wrap .end// -->
+                </aside>
+                <main class="col-lg-6">
+                    <article class="ps-lg-3">
+                        <h4 class="title text-dark" id="Description" name="Description"> </h4>
+                        <div class="rating-wrap my-3">
+                            <ul class="rating-stars">
+                                <li style="width:80%" class="stars-active"> <img src="images/misc/stars-active.svg" alt=""> </li>
+                                <li> <img src="images/misc/starts-disable.svg" alt=""> </li>
+                            </ul>
+                            <b class="label-rating text-warning"> 4.5</b>
+                            <i class="dot"></i>
+                            <span class="label-rating text-muted"> <i class="fa fa-shopping-basket"></i> 154 orders </span>
+                            <i class="dot"></i>
+                            <span class="label-rating text-success">In stock</span>
+                        </div> <!-- rating-wrap.// -->
+                        <div id="stars">
+                        </div>
+                        <div class="mb-3">
+
+                            <var class="price h5" id="Price" name="Price">  </var>
+                            <span class="text-muted">/per Item</span>
+                        </div>
+
+
+                        <p>Modern look and quality demo item is a streetwear-inspired collection that continues to break away from the conventions of mainstream fashion. Made in Italy, these black and brown clothing low-top shirts for men.</p>
+
+                        <dl class="row">
+                            <dt class="col-3">Type:</dt>
+                            <dd class="col-9" id="Type"></dd>
+
+                            <dt class="col-3">Material</dt>
+                            <dd class="col-9" id="Material"> </dd>
+
+                            <dt class="col-3">Brand</dt>
+                            <dd class="col-9" id="Brand"> </dd>
+                        </dl>
+
+                        <hr>
+
+                        <div class="row mb-4">
+                            <div>
+                                <input type="text" id="id" hidden class="form-control" disabled="disabled" />
+                                <input type="text" id="RoomId" hidden class="form-control" disabled="disabled" />
+                            </div>
+                            @*
+                            <div class="col-md-4 col-6 mb-2">
+                            <label class="form-label">Color</label>
+                            <select id="Color" name="ColorId" class="form-select">
+                            <option>Select Color</option>
+                            </select>
+                            </div>*@
+                            <div class="card-body" id="Variaction">
+                            </div>
+                            <div class="col-md-4 col-6 mb-3">
+                                <label class="form-label d-block">Quantity</label>
+                                <div class="col">
+
+                                    <input type="button" onclick="decrementValue()" value="-" />
+                                    <input type="text" name="quantity" value="1" maxlength="2" id="quantity" max="10" size="1" />
+                                    <input type="button" onclick="incrementValue()" value="+" />
+
+                                </div> <!-- input-group.// -->
+                            </div> <!-- col.// -->
+                        </div> <!-- row.// -->
+
+                        <a onclick="Buynow();" class="btn  btn-warning pointer"> Buy now </a>
+                        <a onclick="Cart();" class="btn  btn-primary pointer"> <i class=" bi bi-cart"></i> Add to cart </a>
+                        <a href="" onclick="Wishlist();" class="btn  btn-light pointer"> <i class="bi bi-heart"></i> Save </a>
+                        <br>
+                        <br>
+                       
+                        <button onclick="StoreChat();">Chat to Store </button>
+
+                    </article> <!-- product-info-aside .// -->
+                </main>
+                <!-- col.// -->
+            </div> <!-- row.// -->
+            <div class="col-md-3" id="Chat">
+                <!-- DIRECT CHAT SUCCESS -->
+                <div class="box box-success direct-chat direct-chat-success">
+                    <div class="box-header with-border">
+                        <h3 class="box-title">Direct Chat</h3>
+
+                       
+                    </div>
+                    <!-- /.box-header -->
+                    <div class="box-body">
+                        <!-- Conversations are loaded here -->
+                        <div class="direct-chat-messages" id="MassegeDetail">
+                            <!-- Message. Default to the left -->
+                            @* <div class="direct-chat-msg">
+                            <div class="direct-chat-info clearfix">
+                            <span class="direct-chat-name pull-left">Alexander Pierce</span>
+                            <span class="direct-chat-timestamp pull-right">23 Jan 2:00 pm</span>
+                            </div>
+                            <!-- /.direct-chat-info -->
+                            <img class="direct-chat-img" src="https://bootdey.com/img/Content/user_1.jpg" alt="Message User Image"><!-- /.direct-chat-img -->
+                            <div class="direct-chat-text">
+                            Is this template really for free? That's unbelievable!
+                            </div>
+                            <!-- /.direct-chat-text -->
+                            </div>*@
+                            <!-- /.direct-chat-msg -->
+                            <!-- Message to the right -->
+                            <!-- /.direct-chat-msg -->
+                        </div>
+                        <!--/.direct-chat-messages-->
+                        <!-- Contacts are loaded here -->
+                        <div class="direct-chat-contacts">
+                            <ul class="contacts-list">
+                                <li>
+                                    <a href="#">
+
+                                        <div class="contacts-list-info">
+                                            <span class="contacts-list-name">
+                                                Count Dracula
+                                                <small class="contacts-list-date pull-right">2/28/2015</small>
+                                            </span>
+                                            <span class="contacts-list-msg">How have you been? I was...</span>
+                                        </div>
+                                        <!-- /.contacts-list-info -->
+                                    </a>
+                                </li>
+                                <!-- End Contact Item -->
+                            </ul>
+                            <!-- /.contatcts-list -->
+                        </div>
+                        <!-- /.direct-chat-pane -->
+                    </div>
+                    <!-- /.box-body -->
+                    <div class="box-footer">
+                        <div class="input-group">
+                            <input type="text" id="Message" placeholder="Type Message ..." class="form-control">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-success btn-flat" onclick="SendChat()">Send</button>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- /.box-footer-->
+                </div>
+                <!--/.direct-chat -->
+            </div>
+        </div> <!-- container .//  -->
+    </section>
+    <!-- ============== SECTION CONTENT END// ============== -->
+    <!-- ============== SECTION  ============== -->
+    <section class="padding-y bg-light border-top">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-8">
+                    <!-- =================== COMPONENT SPECS ====================== -->
+                    <div class="card">
+                        <header class="card-header">
+                            <ul class="nav nav-tabs card-header-tabs">
+                                <li class="nav-item">
+                                    <a href="#" data-bs-target="#tab_specs" data-bs-toggle="tab" class="nav-link active">Specification</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" data-bs-target="#tab_warranty" data-bs-toggle="tab" class="nav-link">Warranty info</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" data-bs-target="#tab_shipping" data-bs-toggle="tab" class="nav-link">Shipping info</a>
+                                </li>
+                                <li class="nav-item">
+                                    <a href="#" data-bs-target="#tab_seller" data-bs-toggle="tab" class="nav-link">Seller profile</a>
+                                </li>
+                            </ul>
+                        </header>
+                        <div class="tab-content">
+                            <article id="tab_specs" class="tab-pane show active card-body">
+                            </article> <!-- tab-content.// -->
+                            <article id="tab_warranty" class="tab-pane card-body">
+                            </article>
+                            <article id="tab_shipping" class="tab-pane card-body">
+                            </article>
+                            <article class="tab-pane card-body" id="tab_seller">
+                            </article>
+                        </div>
+                    </div>
+                    <!-- =================== COMPONENT SPECS .// ================== -->
+                    <aside class="col-lg-8">
+                        <!-- =================== COMPONENT ADDINGS ====================== -->
+                        <div class="card">
+                            <div class="card-body" id="Reviews">
+                                <h5 class="card-title">Reviews</h5>
+
+
+
+
+
+                            </div> <!-- card-body .// -->
+                        </div> <!-- card .// -->
+                        <!-- =================== COMPONENT ADDINGS .// ================== -->
+                    </aside> <!-- col.// -->
+                </div> <!-- col.// -->
+                <aside class="col-lg-4">
+                    <!-- =================== COMPONENT ADDINGS ====================== -->
+                    <div class="card">
+                        <div class="card-body" id="Similar">
+                            <h5 class="card-title">Similar items</h5>
+
+
+
+
+
+                        </div> <!-- card-body .// -->
+                    </div> <!-- card .// -->
+                    <!-- =================== COMPONENT ADDINGS .// ================== -->
+                </aside> <!-- col.// -->
+            </div>
+
+            <br><br>
+
+        </div><!-- container // -->
+    </section>
+</div>
+<div class="modal fade modal " id="error">
+    <div class="modal-dialog row no-gutters col-lg-2 col-md-12 ml-auto">
+        <div class="modal-content ">
+                <div class="alert alert-warning shadow my-3" role="alert" style="border-radius: 3px">
+                    <div class="text-center">
+                        <svg width="3em" height="3em" viewBox="0 0 16 16" class="m-1 bi bi-cone-striped" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M9.97 4.88l.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z" />
+                        </svg>
+                    </div>
+                    <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Warning:</b>Please Login Account.</p>
+                </div>
+
+        </div>
+    </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        debugger
+           $("#Showitem").hide();
+        $("#Chat").hide();
+        $('#error').modal('hide');
+        // $(".alert").hide();
+        getid();
+        //$("#image").elevateZoom({ gallery: 'image1', cursor: 'pointer', galleryActiveClass: "active" });
+        //$("#image").bind("click", function (e) {
+        //    var ez = $('#image').data('elevateZoom');
+        //    ez.closeAll();
+        //    $.fancybox(ez.getGalleryList());
+        //    return false;
+        //});
+
+        $("#img1").elevateZoom({ gallery: 'image1', cursor: 'pointer', galleryActiveClass: "active" });
+        $("#img1").bind("click", function (e) {
+            var ez = $('#img1').data('elevateZoom');
+            ez.closeAll();
+            $.fancybox(ez.getGalleryList());
+            return false;
+        });
+
+    });
+    function getid() {
+        debugger
+        $("#Cart").hide();
+        let url_str = window.location.href;
+        let url = new URL(url_str);
+        let search_params = url.searchParams;
+
+        let id = search_params.get('Id');
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/ProductDetails?id=' + id,
+            success: function (response) {
+                debugger
+                var item = '';
+                console.log(response);
+                $("#tab_specs").append(response.Specification);
+                $("#tab_warranty").append(response.Warranty);
+                $("#tab_shipping").append(response.Stores.ShippingInfo);
+                item += '<tr>';
+                item += '<th>Store name:</th> ';
+                item += "<td>  " + response.Stores.Name + "</td>";
+                item += '</tr>';
+                item += '<tr>';
+                item += '<th>Address: </th>';
+                item += "<td>" + response.Stores.Address + "</td>";
+                item += '</tr>';
+                item += '<tr>';
+                item += '<th>City: </th>';
+                item += "<td>" + response.Stores.City + "</td>";
+                item += '</tr>';
+                item += '<tr>';
+                item += '<th>Contact: </th>';
+                item += "<td>" + response.Stores.Number + "</td>"; 
+                item += "<tr><th><button  class='btn  btn-light pointer' >Store View</button></th></tr>";
+                item += '</tr>';
+                $("#tab_seller").append(item);
+                $("#image").append("<img id='img1' height='2000'  width='2500' src =" + response.Products.Image + " data-zoom-image=" + response.Products.Image + "> </img>");
+                $.each(response.Images, function (data, obj) {
+                    $("#image1").append("<a class='active' data-image=" + obj + " data-zoom-image=" + obj + "><img height='70'  width='70' src =" + obj + "> </img></a>");
+                });
+                $("#Description").append(response.Products.Name);
+                $("#id").val(response.Products.Id);
+                $("#StoreId").val(response.Products.StoreId);
+                $("#Price").append(response.Products.Variaction.Inventrys.Price);
+                $("#Brand").append(response.ProductBrande)
+                $("#Type").append(response.ProductTypee)
+                $("#Material").append(response.ProductMateriale)
+                var Variaction = '';
+                $.each(response.ProductsVariaction, function (data, obj) {
+                    Variaction += "<label class='checkbox-btn' onclick=Update(" + obj.Id + ")>";
+                    Variaction += "<input type='radio'   name='checkvariaction' value=" + obj.Id + ">";
+                    Variaction += "<span class='btn btn-light'  >" + obj.Variaction + "<input type='radio'  onclick=Update(" + obj.Id + ") name='checkvariaction' value=" + obj.Id + "> </span>";
+                    Variaction += '</input>';
+                    Variaction += '</label>';
+
+                });
+                $("#Variaction").append(Variaction);
+                var Similar = '';
+                $.each(response.ProductViewResponce, function (data, obj) {
+                    Similar += '<article class="itemside mb-3" >';
+                    Similar += '<div  class="aside">';
+                    Similar += "<img height='100'  src =" + obj.Image + ">";
+                    Similar += '</div>';
+                    Similar += '</div>';
+                    Similar += '<div class="info" >';
+                    Similar += "<a  href='/Daraz/ProductDetail?Id=" + obj.Id + "'>";
+                    Similar += "<p class='title mb-1' > " + obj.Name + "</p>";
+                    Similar += '</a>';
+                    Similar += "<strong class='price'>" + obj.Variaction.Inventrys.Price + "</strong>";
+                    Similar += '</div>';
+                    Similar += '</article>';
+
+                });
+                $("#Similar").append(Similar);
+                var data = response.Reviews.length;
+                var sum = 0;
+                var review = '';
+                $.each(response.Reviews, function (data, obj) {
+                    sum += obj.Ratings;
+                    review += '  <dl class="row">';
+                    review += "<dt class='col-9'>  " + obj.User.FirstName + "</dt>";
+                    review += ' <dt class="col-3">';
+                    review += (obj.Ratings == 1) ? "<span class='bi bi-star checked' ></span>" : '';
+                    review += (obj.Ratings == 2) ? "<span class='bi bi-star checked'></span><span class='bi bi-star checked' ></span>" : '';
+                    review += (obj.Ratings == 3) ? "<span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span>" : '';
+                    review += (obj.Ratings == 4) ? "<span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span>" : '';
+                    review += (obj.Ratings == 5) ? "<span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked'></span> " : '';
+                    review += '</dt>';
+                    review += "<dd class='col-9'>  " + obj.Comment + "</dd>";
+                    review += '</dl>';
+                    for (var x in obj.ReviewsImages) {
+                        review += "<img height='70'  width='70' src =" + obj.ReviewsImages[x].Image + "> </img>";
+                    }
+                    review += '<hr>';
+                });
+                $("#Reviews").append(review);
+                var average = (sum / data);
+                let a = Math.round(average);
+                if (a == 1) {
+                    $("#stars").append("<span class='bi bi-star checked' ></span><span class='bi bi-star ' ></span><span class='bi bi-star' ></span><span class='bi bi-star ' ></span><span class='bi bi-star ' ></span>  (" + data + ")");
+                } if (a == 2) {
+                    $("#stars").append("<span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star ' ></span><span class='bi bi-star ' ></span><span class='bi bi-star ' ></span>  (" + data + ")");
+                } if (a == 3) {
+                    $("#stars").append("<span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star ' ></span><span class='bi bi-star ' ></span>  (" + data + ")");
+                } if (a == 4) {
+                    $("#stars").append("<span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star' ></span>  (" + data + ")");
+                } if (a == 5) {
+                    $("#stars").append("<span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span><span class='bi bi-star checked' ></span> (" + data + ")");
+                }
+
+
+            },
+        });
+    };
+    function Update(id) {
+        debugger
+        // $("#Check").prop("checked", false);
+        //$("#Check"+id+"").attr("checked", true);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/VariactionData?id=' + id,
+            success: function (response) {
+                $("#Price").empty();
+                $("#Price").append(response.Price);
+            }
+        });
+    };
+    function Cart() {
+        debugger
+        var variactionId = $("input[name=checkvariaction]:checked").val();
+        var data = new FormData;
+
+        data.append("Quantity", $("#quantity").val());
+        data.append("ProductId", $("#id").val());
+        data.append("VariactionId", variactionId);
+        console.log(data);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            async: true,
+            data: data,
+            type: 'post',
+            url: '/Daraz/AddToCart',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                debugger
+                // $("#Showitem").show();
+                //// var Quantity = response.Quantity;
+                // $("#Showitem").append(response);
+                location.reload(true)
+
+            },
+            error: function () {
+                $('#error').modal('show');
+                 $("#error").fadeTo(2000, 500).slideUp(500, function() {
+                  $("#error").slideUp(500);
+                    $('#error').modal('hide');
+                 });
+            },
+        });
+    };
+    function Buynow() {
+        debugger
+        var data = new FormData;
+
+        data.append("Quantity", $("#quantity").val());
+        data.append("Id", $("#id").val());
+        data.append("SizeId", $("#Size").val());
+        data.append("ColorId", $("#Color").val());
+        data.append("Material", $("#Material").val());
+        console.log(data);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            async: true,
+            data: data,
+            type: 'post',
+            url: '/Daraz/Cart',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                debugger
+                //  window.location.href = '/Daraz/Checkoute';
+
+            },
+            error: function () {
+                $('#error').modal('show');
+                $("#error").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#error").slideUp(500);
+                    $('#error').modal('hide');
+                });
+            },
+        });
+    };
+    function incrementValue() {
+        var value = parseInt(document.getElementById('quantity').value, 10);
+        debugger
+        value = isNaN(value) ? 0 : value;
+        if (value < 10) {
+            value++;
+            document.getElementById('quantity').value = value;
+        }
+    };
+    function decrementValue() {
+        var value = parseInt(document.getElementById('quantity').value, 10);
+        debugger
+        value = isNaN(value) ? 0 : value;
+        if (value > 1) {
+            value--;
+            document.getElementById('quantity').value = value;
+        }
+
+    };
+    function Wishlist() {
+        debugger
+        var data = {
+
+            Id: $("#id").val(),
+        };
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            data,
+            type: "Get",
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            url: '/Daraz/Wishlist',
+            success: function (result) {
+
+            },
+            error: function () {
+                $('#error').modal('show');
+                $("#error").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#error").slideUp(500);
+                    $('#error').modal('hide');
+                });
+            },
+        });
+    };
+    function StoreChat() {
+        debugger
+        var x = document.getElementById("Chat");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        }
+        else {
+            x.style.display = "none";
+        }
+        var Id = $("#StoreId").val();
+        var token = sessionStorage.getItem('Token');
+        if (token == null) {
+            var id = localStorage.getItem('GuestId');
+
+        }
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            type: 'get',
+            url: '/Daraz/BuyerChatData?id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+                var data = '';
+                var Id = $("#StoreId").val();
+                $("#RoomId").val(response.RoomId);
+                $.each(response.RoomChat, function (key, obj) {
+                    data += (obj.CreaterId == response.Id) ? "<div class='direct-chat-msg right'><div class='direct-chat-info clearfix'><span class='direct-chat-timestamp pull-left'>" + (formatDate(obj.CreatedDate)) + "</span></div><div class='direct-chat-text'>" + obj.Comment + "</div></div>" : "<div class='direct-chat-msg left'><div class='direct-chat-info clearfix'><span class='direct-chat-timestamp pull-right'>" + (formatDate(obj.CreatedDate)) + "</span></div><div class='direct-chat-text'>" + obj.Comment + "</div></div>";
+                });
+                $("#MassegeDetail").append(data);
+            }
+        });
+
+    };
+    function formatDate(createdDate) {
+        var d = new Date(createdDate),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    };
+    function SendChat() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        if (token == null) {
+            var id = localStorage.getItem('GuestId');
+
+        }
+        var data = new FormData;
+        data.append("Token", token);
+        data.append("GuestId", id);
+        data.append("RoomId", $("#RoomId").val());
+        data.append("ReceiverId", $("#StoreId").val());
+        data.append("Comment", $("#Message").val());
+        console.log(data);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            data: data,
+            type: 'post',
+            async: true,
+            url: '/Daraz/BuyerChat',
+            processData: false,
+            contentType: false,
+            success: function (response) {
+                debugger
+                $("#Message").val('');
+                console.log(response);
+                if (response.GuestId != 0) {
+                    localStorage.setItem('GuestId', response.GuestId);
+                    var data = '';
+                    $.each(response.RoomChat, function (key, obj) {
+                        data += (obj.CreaterId == response.GuestId) ? "<div class='direct-chat-msg right'><div class='direct-chat-info clearfix'><span class='direct-chat-timestamp pull-left'>" + (formatDate(obj.CreatedDate)) + "</span></div><div class='direct-chat-text'>" + obj.Comment + "</div></div>" : "<div class='direct-chat-msg left'><div class='direct-chat-info clearfix'><span class='direct-chat-timestamp pull-right'>" + (formatDate(obj.CreatedDate)) + "</span></div><div class='direct-chat-text'>" + obj.Comment + "</div></div>";
+
+                    });
+                    $("#MassegeDetail").empty();
+                    $("#MassegeDetail").append(data);
+                } else {
+                    var data = '';
+                    $.each(response.RoomChat, function (key, obj) {
+                        data += (obj.CreaterId == response.Id) ? "<div class='direct-chat-msg right'><div class='direct-chat-info clearfix'><span class='direct-chat-timestamp pull-left'>" + (formatDate(obj.CreatedDate)) + "</span></div><div class='direct-chat-text'>" + obj.Comment + "</div></div>" : "<div class='direct-chat-msg left'><div class='direct-chat-info clearfix'><span class='direct-chat-timestamp pull-right'>" + (formatDate(obj.CreatedDate)) + "</span></div><div class='direct-chat-text'>" + obj.Comment + "</div></div>";
+
+                    });
+                    $("#MassegeDetail").empty();
+                    $("#MassegeDetail").append(data);
+                }
+            }
+        });
+    };
+</script>

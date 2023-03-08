@@ -1,0 +1,166 @@
+﻿@{
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+
+      
+        Odershistery();
+    });
+    function Status() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Home/ShippingStatuss',
+                success: function (response) {
+                $.each(response, function (key, obj) {
+                console.log(obj.Name);
+                    $(".form-select").append('<Option value=' + obj.Id + '>' + obj.Name + '</Option>');
+                });
+            }
+        });
+    }
+    function Odershistery() {
+        debugger
+        var url = window.location.search;
+var params = {};
+if (url) {
+    var parts = url.substring(1).split("&");
+    for (var i = 0; i < parts.length; i++) {
+        var nv = parts[i].split("=");
+        if (!nv[0]) continue;
+        params[nv[0]] = nv[1] || true;
+    }
+}
+        console.log(params);
+
+       
+       
+       
+          
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+             data: params,
+            url: '/Home/SelleHistory',
+            success: function (response) {
+                debugger
+                console.log(response);
+                var item = "";
+                $.each(response, function (key, obj) {
+              
+                    console.log(obj);
+                    item += '<article class="card border-primary mb-4">';
+                    item += '<div class="card-body" >';
+                    item += '<ul class="row" > ';
+                    item += '<header class="d-lg-flex" >';
+                    item += '<div class="flex-grow-1" >';
+                    item += "<h6 class='mb-0' >Order ID:" + obj.Id + "</h6>";
+                    item += "<h6 class='mb-0 text-danger' >"+obj.Status + "</h6>";
+                    item += "<span class='text-muted' > Date: " + (formatDate(obj.DateTime)) + "</span>";
+                    item += '</div>';
+                    item += '<div>';
+                    item += "<a  class='btn btn-sm btn-outline-danger' >";
+                    item += "<select class='form-select' id='Status" + obj.Id + "'>";
+                    item +=  '</select>';
+                    item +=   '</a > ';
+                    item += "<a  class='btn btn-sm btn-primary' onclick='StatusId("+obj.Id+")' >Update Status </a>";
+                    item += '</div>';
+                    item += '</header>';
+                    item += '<hr>';
+                    item += '<div class="row" >';
+                    item += '<div class="col-lg-4" >';
+                    item += '<p class="mb-0 text-muted" > Contact </p>';
+                    item += "<p class='m-0'>" + obj.FirstName + "<br>Email: " + obj.Email + "<br>Phone: " + obj.PhoneNumber + "</p>";
+                    item += '</div>';
+                    item += '<div class="col-lg-4 border-start" >';
+                    item += '<p class="mb-0 text-muted" > Shipping address </p>';
+                    item += "<p class='m-0'>" + obj.City + "<br>" + obj.Address + "</p>";
+                    item += '</div>';
+                    item += '<div class="col-lg-4 border-start" >'
+                    item += '<p class="mb-0 text-muted" > Payment </p>'
+                    //item += '<p class="m-0" >'
+                    //item += '<span class="text-success" >Visa *** 4216 < /span>' '<br>'
+                    //item += 'Shipping fee: $56' '<br >'
+                    ////                'Total paid: $456'
+                    item += '</p>';
+                    item += '</div>';
+                    item += '</div>';
+                    item += "<hr>";
+                    $.each(obj.Oders, function (key, obje) {
+                    for (let x in obje.Product) {
+                        console.log(obje.Product[x]);
+                        var Quantity = (obje.Product[x].Variaction.Inventrys.Quantity);
+                        var Price = (obje.Product[x].Variaction.Inventrys.Price);
+                        var total = (Quantity * Price);
+                        item += '<li class="col-xl-4  col-lg-6" >';
+                        item += '<figure class="itemside mb-3" >';
+                        item += '<div class="aside" >';
+                        item += "<img width='72' height = '72' src = " + obje.Product[x].Image + " class='img-sm rounded border'/>";
+                        item += '</div>';
+                        item += '<figcaption class="info" >';
+                        item += "<p class='title' >" + obje.Product[x].Name + "</p>";
+                         item += "<div class='price text-muted'>" + obje.Product[x].Variaction.Variaction + "</div>";
+                        item += "<strong>" + Quantity + "x = Rs." + total + "</strong>";
+                        item += '</figcaption>';
+                        item += '</figure>';
+                        item += '</li>';
+                    }
+                    });
+                        item += '</ul>';
+                        item += '</div>';
+                        item += '</article>';
+                });
+                $("#Oder").append(item);
+                Status();
+            }
+        });
+    }
+    function StatusId(id){
+        debugger
+        var Id = $("select#Status"+id+"").find("option:selected").val();
+        var data={
+            StatusId :Id,
+            Id : id
+        };
+        console.log(data);
+         var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            data,
+            url: '/Home/StatusShipping',
+            success: function (response) {
+                location.reload(true)
+            }
+        });
+    }
+    function formatDate(DateTime) {
+        var d = new Date(DateTime),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    };
+</script>
+        <div class="content-body" id="Oder">
+
+
+
+
+
+    </div> <!-- card-body .// -->

@@ -1,0 +1,116 @@
+﻿
+@{
+    Layout = "~/Views/Shared/_Layout1.cshtml";
+}
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        getid();
+        $('#error').modal('hide');
+    });
+    function getid() {
+        debugger
+        let url_str = window.location.href;
+        let url = new URL(url_str);
+        let search_params = url.searchParams;
+
+        let id = search_params.get('Id');
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/Productss?id=' + id,
+            success: function (response) {
+                debugger
+                var item = '';
+                var items = '';
+                var MiliSeconds = 2.592e+8;
+                var date = new Date;
+                $.each(response, function (key, obj) {
+                    console.log(obj);
+                        items += ' <div class="col-lg-3 col-md-6 col-sm-6" >';
+                        items += '<figure class="card-product-grid" >';
+                    items += ((date - (new Date(obj.CreatedDate))) <= MiliSeconds) ? ' <a href="/Daraz/ProductDetail?Id=' + obj.Id + '" class="img-wrap rounded bg-gray-light"><p class="topbar"><span class="badge bg-danger"> New</span></p><img height="250" class= "mix-blend-multiply" src = "' + obj.Image + '" ></a> ' : ' <a href="/Daraz/ProductDetail?Id=' + obj.Id + '" class="img-wrap rounded bg-gray-light"><img height="250" class= "mix-blend-multiply" src = "' + obj.Image + '" ></a>';
+                        items += '<figcaption class="info-wrap border-top" >';
+                        items += "<a   class='float-end btn btn-light btn-icon'onclick='Wishlist(" + obj.Id + ")' ><i class='bi bi-heart'></i> </a>";
+                        items += '<div class="price-wrap" >';
+                    items += "<span class='price' style ='color:red;' >Rs:" + obj.Variaction.Inventrys.Price + "</span>";
+                        items += '</div>';
+                        items += "<p class='title mb-2'>" + obj.Name + "</p>";
+                        items += '</figcaption>';
+                        items += '</figure>';
+                        items += '</div>';
+                    
+                });
+                $("#products").append(items);
+            },
+            error: function () {
+                $('#error').modal('show');
+                $("#error").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#error").slideUp(500);
+                    $('#error').modal('hide');
+                });
+            },
+        });
+    }
+         function Wishlist(id) {
+            debugger
+            var token = sessionStorage.getItem('Token');
+            $.ajax({
+                type: "Get",
+                headers: {
+                    Authorization: 'Bearer ' + token
+                },
+                url: '/Daraz/Wishlist?id=' + id,
+                success: function (result) {
+                },
+            error: function () {
+                $('#error').modal('show');
+                $("#error").fadeTo(2000, 500).slideUp(500, function () {
+                    $("#error").slideUp(500);
+                    $('#error').modal('hide');
+                });
+            },
+            });
+        }
+</script>
+
+
+
+
+<!-- ================ SECTION PRODUCTS ================ -->
+<section class="padding-y">
+    <div class="container">
+        <header class="section-heading">
+            <h3 class="section-title"> products</h3>
+        </header>
+
+        <div class="row" id="products">
+
+
+            
+
+
+        </div> <!-- row end.// -->
+
+    </div> <!-- container end.// -->
+</section>
+
+<div class="modal fade modal " id="error">
+    <div class="modal-dialog row no-gutters col-lg-2 col-md-12 ml-auto">
+        <div class="modal-content ">
+            <div class="alert alert-warning shadow my-3" role="alert" style="border-radius: 3px">
+                <div class="text-center">
+                    <svg width="3em" height="3em" viewBox="0 0 16 16" class="m-1 bi bi-cone-striped" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M9.97 4.88l.953 3.811C10.159 8.878 9.14 9 8 9c-1.14 0-2.158-.122-2.923-.309L6.03 4.88C6.635 4.957 7.3 5 8 5s1.365-.043 1.97-.12zm-.245-.978L8.97.88C8.718-.13 7.282-.13 7.03.88L6.275 3.9C6.8 3.965 7.382 4 8 4c.618 0 1.2-.036 1.725-.098zm4.396 8.613a.5.5 0 0 1 .037.96l-6 2a.5.5 0 0 1-.316 0l-6-2a.5.5 0 0 1 .037-.96l2.391-.598.565-2.257c.862.212 1.964.339 3.165.339s2.303-.127 3.165-.339l.565 2.257 2.391.598z" />
+                    </svg>
+                </div>
+                <p style="font-size:18px" class="mb-0 font-weight-light"><b class="mr-1">Warning:</b>Please Login Account.</p>
+            </div>
+
+        </div>
+    </div>
+</div>

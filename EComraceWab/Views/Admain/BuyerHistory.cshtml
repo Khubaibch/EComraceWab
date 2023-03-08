@@ -1,0 +1,111 @@
+﻿@{
+    Layout = "~/Views/Shared/AdmainLayout.cshtml";
+}
+
+
+
+
+<script>
+    $(document).ready(function () {
+        debugger
+        $("#AsineDiv").hide();
+        Odershistery();
+
+    });
+    function Odershistery() {
+        let url_str = window.location.href;
+        let url = new URL(url_str);
+        let search_params = url.searchParams;
+
+        let id = search_params.get('Id');
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Admain/BuyerHistoryData?Id=' + id,
+            success: function (response) {
+                debugger
+                console.log(response);
+                var item = "";
+                $.each(response, function (key, obj) {
+                    item += '<article class="card border-primary mb-4" >';
+                    item += '<div class="card-body" >';
+                    item += '<ul class="row" >';
+                    item += '<header class="d-lg-flex" >';
+                    item += '<div class="flex-grow-1" >';
+                    item += "<h6 class='mb-0' >Order ID:" + obj.Oders.Id + "</h6>";
+                    item += "<span class='text-muted' > Date: " + (formatDate(obj.Oders.DateTime)) + "</span>";
+                    item += '</div>';
+                    item += '<div>';
+                    //  item +=        '<a href="#" class="btn btn-sm btn-outline-danger" >" Cancel order </a>'
+                    // item +=        <a href = "#" class="btn btn-sm btn-primary" > Track order < /a>
+                    item += "<h6 class='mb-0 text-danger' >" + obj.Oders.Status + "</h6>";
+                    item += '</div>';
+                    item += '</header>';
+                    item += '<hr>';
+                    item += '<div class="row" >';
+                    item += '<div class="col-lg-4" >';
+                    item += '<p class="mb-0 text-muted" > Contact </p>';
+                    item += "<p class='m-0'>" + obj.Oders.FirstName + "<br>Email: " + obj.Oders.Email + "<br>Phone: " + obj.Oders.PhoneNumber + "</p>";
+                    item += '</div>';
+                    item += '<div class="col-lg-4 border-start" >';
+                    item += '<p class="mb-0 text-muted" > Shipping address </p>';
+                    item += "<p class='m-0'>" + obj.Oders.City + "<br>" + obj.Oders.Address + "</p>";
+                    item += '</div>';
+                    item += '<div class="col-lg-4 border-start" >'
+                    item += '<p class="mb-0 text-muted" > Payment </p>'
+                    //item += '<p class="m-0" >'
+                    //item += '<span class="text-success" >Visa *** 4216 < /span>' '<br>'
+                    //item += 'Shipping fee: $56' '<br >'
+                    ////                'Total paid: $456'
+                    item += '</p>';
+                    item += '</div>';
+                    item += '</div>';
+                    item += "<hr>";
+                    for (let x in obj.Oders.Product) {
+                        console.log(obj.Oders.Product[x]);
+                        var Quantity = (obj.Oders.Product[x].Quantity);
+                        var Price = (obj.Oders.Product[x].Price);
+                        var total = (Quantity * Price);
+                        item += '<li class="col-xl-4  col-lg-6" >';
+                        item += '<figure class="itemside mb-3" >';
+                        item += '<div class="aside" >';
+                        item += "<img width='72' height = '72' src = " + obj.Oders.Product[x].Image + " class='img-sm rounded border'/>";
+                        item += '</div>';
+                        item += '<figcaption class="info" >';
+                        item += "<p class='title' >" + obj.Oders.Product[x].Description + "</p>";
+                        item += "<strong>" + Quantity + "x = Rs." + total + "</strong>";
+                        item += '</figcaption>';
+                        item += '</figure>';
+                        item += '</li>';
+                    }
+                    item += "</ul>";
+                    item += "</div>";
+                    item += "</article>";
+                });
+                $("#Oder").append(item);
+            }
+        });
+    }
+    function formatDate(DateTime) {
+        var d = new Date(DateTime),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    };
+</script>
+        <div class="content-body" id="Oder">
+
+
+
+
+
+          
+
+        </div> <!-- card-body .// -->

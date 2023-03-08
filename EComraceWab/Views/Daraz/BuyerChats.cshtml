@@ -1,0 +1,179 @@
+﻿@{
+    Layout = "~/Views/Shared/_ProductLayout.cshtml";
+}
+
+<script>
+    $(document).ready(function () {
+        debugger
+
+        $("#accordionSidebar").hide();
+        $("#nave").hide();
+        Messages();
+    });
+    function Messages() {
+        debugger
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/BuyerChatsData',
+            success: function (response) {
+                console.log(response);
+                var data = '';
+                var Userdata = '';
+                $.each(response.UserRoom, function (key, obj) {
+                    console.log(obj);
+                    data += '<div class="friend-drawer friend-drawer--onhover">';
+                    data += "<a href='#' onclick='UserMessages(" + obj.Id + ")' class='text'>";
+                    data += "<img class='profile-image'  src=" + obj.User.Image + " >";
+                    data += '<span class="settings-tray--right">';
+                    data += "<i class='material-icons'> " + obj.User.FirstName + "</i>";
+                    data += '</span>';
+                    // data += "<p class='text-muted'>" + obj.Comment + "</p>";
+                    data += '</a>';
+                    data += '</div>';
+                    data += '<hr>';
+                });
+               
+                $("#AllMessages").append(data);
+                Userdata += "<img class='profile-image'  src=" + response.User.Image + " >";
+                Userdata += '<span  class="settings-tray--right">';
+                Userdata += "<i class='material-icons'> " + response.User.FirstName + "</i>";
+                Userdata += '</span>';
+                $("#Admain").append(Userdata);
+
+            }
+        });
+    }
+    function formatDate(createdDate) {
+        var d = new Date(createdDate),
+            month = '' + (d.getMonth() + 1),
+            day = '' + d.getDate(),
+            year = d.getFullYear();
+
+        if (month.length < 2) month = '0' + month;
+        if (day.length < 2) day = '0' + day;
+
+        return [year, month, day].join('-');
+    };
+    function UserMessages(id) {
+        debugger
+        $("#RoomId").val(id);
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            url: '/Daraz/StoreMessage?id=' + id,
+            success: function (response) {
+                console.log(response);
+               
+                    var data = '';
+                    var Userdata = '';
+                    debugger
+                    Userdata += '<div class="friend-drawer no-gutters friend-drawer--grey"  >';
+                    Userdata += "<img class='profile-image'  src=" + response.ChatsData.User.Image + " >";
+                    Userdata += '<div class="text">';
+                    Userdata += "<h6> " + response.ChatsData.User.FirstName + "</h6>";
+                    Userdata += '</div>';
+                    Userdata += '</div>';
+
+                    $("#UserImage").empty();
+                    $("#UserImage").append(Userdata);
+
+                    $.each(response.ChatsData.Chat, function (key, obj) {
+                        data += (obj.CreaterId == response.Id) ? "<div class='row no-gutters'><div class='col-md-auto offset-md-9'><div class='chat-bubble chat-bubble--right'>" + obj.Comment + "<br><time class='time text-muted small '>" + (formatDate(obj.CreatedDate)) + "</time></div></div></div>" : "<div class='row no-gutters'><div class='col-md-auto'><div class='chat-bubble chat-bubble--left'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div></div></div>";
+
+
+
+
+
+                    });
+                    debugger
+                    $("#UserMessages").empty();
+                    $("#UserMessages").append(data);
+                
+            }
+        });
+
+    }
+    function SendMessage() {
+        debugger
+        var data = {
+            RoomId: $("#RoomId").val(),
+            Comment: $("#Message").val(),
+        };
+        var token = sessionStorage.getItem('Token');
+        $.ajax({
+            headers: {
+                Authorization: `Bearer ` + token
+            },
+            data,
+            url: '/Daraz/UserSendNewMessage',
+            success: function (response) {
+                console.log(response);
+                $("#Message").val('');
+                var data = '';
+                $.each(response.RoomChat, function (key, obj) {
+                    data += (obj.CreaterId == response.Id) ? "<div class='row no-gutters'><div class='col-md-auto offset-md-9'><div class='chat-bubble chat-bubble--right'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div></div></div>" : "<div class='row no-gutters'><div class='col-md-auto'><div class='chat-bubble chat-bubble--left'>" + obj.Comment + "<br><time class='time text-muted small'>" + (formatDate(obj.CreatedDate)) + "</time></div ></div></div>";
+
+
+
+
+
+                });
+                $("#UserMessages").empty();
+                $("#UserMessages").append(data);
+            }
+        });
+    }
+
+
+</script>
+
+    <button class="btn btn-success" href="/Daraz/OdersView">Back</button>
+<div class="container">
+    <div class="row no-gutters">
+        <div class="col-md-4 border-right" id="AllMessages">
+            <div class="settings-tray" id="Admain">
+            </div>
+            @*  <div class="search-box">
+            <div class="input-wrapper">
+            <i class="material-icons">search</i>
+            <input placeholder="Search here" type="text">
+            </div>
+            </div>*@
+
+            <input type="text" id="RoomId" hidden class="form-control" disabled="disabled" />
+        </div>
+        <div class="col-md-8">
+            <div class="settings-tray">
+                <div class="friend-drawer no-gutters friend-drawer--grey" id="UserImage">
+                </div>
+            </div>
+            <div class="chat-panel">
+                <div id="UserMessages">
+                </div>
+                <div class="row">
+                    <div class="col-12">
+                        <div class="chat-box-tray">
+                            <input type="text" id="Message" placeholder="Type your message here...">
+                            <span class="input-group-btn">
+                                <button type="submit" class="btn btn-success btn-flat" onclick="SendMessage()">Send</button>
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+
+    $('.friend-drawer--onhover').on('click', function () {
+
+        $('.chat-bubble').hide('slow').show('slow');
+
+    });
+</script>
